@@ -1,0 +1,14 @@
+CREATE TABLE `command_log` (
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `uuid` VARCHAR(36) NOT NULL COLLATE 'utf8mb4_0900_ai_ci',
+    `player` VARCHAR(16) NULL DEFAULT NULL COLLATE 'utf8mb4_0900_ai_ci',
+    `command` TEXT NULL DEFAULT NULL COLLATE 'utf8mb4_0900_ai_ci',
+    `server` VARCHAR(16) NULL DEFAULT NULL COLLATE 'utf8mb4_0900_ai_ci',
+    `date` DATETIME NULL DEFAULT (CURRENT_TIMESTAMP),
+    PRIMARY KEY (`id`) USING BTREE,
+    INDEX `uuid` (`uuid`) USING BTREE
+)
+COLLATE='utf8mb4_0900_ai_ci'
+ENGINE=InnoDB
+AUTO_INCREMENT=33
+;

@@ -1,0 +1,10 @@
+CREATE TABLE `ban_ip_list` (
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `ip_address` VARCHAR(24) NOT NULL COLLATE 'utf8mb4_0900_ai_ci',
+    `date` DATETIME NULL DEFAULT (CURRENT_TIMESTAMP),
+    `reason` VARCHAR(64) NULL DEFAULT NULL COLLATE 'utf8mb4_0900_ai_ci',
+    PRIMARY KEY (`id`) USING BTREE
+)
+COLLATE='utf8mb4_0900_ai_ci'
+ENGINE=InnoDB
+;
