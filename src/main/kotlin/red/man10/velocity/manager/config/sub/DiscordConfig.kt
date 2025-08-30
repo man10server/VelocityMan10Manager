@@ -11,7 +11,6 @@ class DiscordConfig: AbstractConfig() {
 
     var chatChannelId: Long = 0
     var systemChannelId: Long = 0
-    var notificationChannelId: Long = 0
     var logChannelId: Long = 0
     var adminChannelId: Long = 0
     var reportChannelId: Long = 0
@@ -23,7 +22,6 @@ class DiscordConfig: AbstractConfig() {
         val channelsNode = config.node("channels")
         chatChannelId = channelsNode.node("chat").getLong(0)
         systemChannelId = channelsNode.node("system").getLong(0)
-        notificationChannelId = channelsNode.node("notification").getLong(0)
         logChannelId = channelsNode.node("log").getLong(0)
         adminChannelId = channelsNode.node("admin").getLong(0)
         reportChannelId = channelsNode.node("report").getLong(0)
@@ -36,7 +34,6 @@ class DiscordConfig: AbstractConfig() {
         val channelsNode = config.node("channels")
         channelsNode.node("chat").set(0)
         channelsNode.node("system").set(0)
-        channelsNode.node("notification").set(0)
         channelsNode.node("log").set(0)
         channelsNode.node("admin").set(0)
         channelsNode.node("report").set(0)

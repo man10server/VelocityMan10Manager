@@ -22,7 +22,6 @@ object DiscordBot: ListenerAdapter() {
     var chatChannel: TextChannel? = null
     var systemChannel: TextChannel? = null
     var logChannel: TextChannel? = null
-    var notificationChannel: TextChannel? = null
     var adminChannel: TextChannel? = null
     var reportChannel: TextChannel? = null
     var jailChannel: TextChannel? = null
@@ -54,7 +53,6 @@ object DiscordBot: ListenerAdapter() {
         chatChannel = guild?.getTextChannelById(config.chatChannelId)
         systemChannel = guild?.getTextChannelById(config.systemChannelId)
         logChannel = guild?.getTextChannelById(config.logChannelId)
-        notificationChannel = guild?.getTextChannelById(config.notificationChannelId)
         adminChannel = guild?.getTextChannelById(config.adminChannelId)
         reportChannel = guild?.getTextChannelById(config.reportChannelId)
         jailChannel = guild?.getTextChannelById(config.jailChannelId)
@@ -70,10 +68,6 @@ object DiscordBot: ListenerAdapter() {
 
     fun log(message: String) {
         logChannel?.sendMessage(message)?.queue()
-    }
-
-    fun notification(message: String) {
-        notificationChannel?.sendMessage(message)?.queue()
     }
 
     fun admin(message: String) {

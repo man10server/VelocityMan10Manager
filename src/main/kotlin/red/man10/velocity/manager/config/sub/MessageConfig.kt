@@ -74,7 +74,8 @@ class MessageConfig: AbstractConfig() {
     var minecraftFirstLoginMessage = "<aqua><bold>%name%<yellow><bold>さんがMan10サーバーに初参加しました！ <aqua><bold>%count%<yellow><bold>人目のプレイヤーです！"
     var discordFirstLoginMessage = "**%name%**さんがMan10サーバーに初参加しました！ **%count%**人目のプレイヤーです！"
 
-
+    var serverBootMessage = ":ballot_box_with_check:**サーバーが起動しました**"
+    var serverShutDownMessage = ":octagonal_sign:**サーバーがシャットダウンしました**"
 
     override fun loadConfig(config: CommentedConfigurationNode) {
         val authNode = config.node("authentication")
@@ -137,6 +138,9 @@ class MessageConfig: AbstractConfig() {
         val firstLoginMessageNode = config.node("firstLoginMessage")
         minecraftFirstLoginMessage = firstLoginMessageNode.node("minecraft").getString(minecraftFirstLoginMessage)
         discordFirstLoginMessage = firstLoginMessageNode.node("discord").getString(discordFirstLoginMessage)
+
+        serverBootMessage = config.node("serverBootMessage").getString(serverBootMessage)
+        serverShutDownMessage = config.node("serverShutDownMessage").getString(serverShutDownMessage)
     }
 
     override fun saveDefaultConfig(config: CommentedConfigurationNode) {
@@ -185,5 +189,8 @@ class MessageConfig: AbstractConfig() {
         val firstLoginMessageNode = config.node("firstLoginMessage")
         firstLoginMessageNode.node("minecraft").set(minecraftFirstLoginMessage)
         firstLoginMessageNode.node("discord").set(discordFirstLoginMessage)
+
+        config.node("discordLoginMessage").set(discordLoginMessage)
+        config.node("discordLogoutMessage").set(discordLogoutMessage)
     }
 }

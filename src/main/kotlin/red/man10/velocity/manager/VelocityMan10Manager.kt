@@ -5,6 +5,7 @@ import com.github.ucchyocean.lc.japanize.Japanizer
 import com.google.inject.Inject
 import com.velocitypowered.api.event.Subscribe
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent
+import com.velocitypowered.api.event.proxy.ProxyShutdownEvent
 import com.velocitypowered.api.plugin.Plugin
 import com.velocitypowered.api.plugin.annotation.DataDirectory
 import com.velocitypowered.api.proxy.ProxyServer
@@ -14,6 +15,7 @@ import org.slf4j.Logger
 import red.man10.velocity.manager.command.CommandRegister
 import red.man10.velocity.manager.config.Config
 import red.man10.velocity.manager.config.sub.GeneralConfig
+import red.man10.velocity.manager.config.sub.MessageConfig
 import red.man10.velocity.manager.database.Database
 import red.man10.velocity.manager.discord.DiscordBot
 import red.man10.velocity.manager.listeners.PlayerListener
@@ -98,5 +100,12 @@ class VelocityMan10Manager {
         Database
         DiscordBot
         proxy.eventManager.register(this, PlayerListener())
+    }
+
+    @Subscribe
+    fun onProxyShutdown(e: ProxyShutdownEvent) {
+        val messageConfig = Config.getOrThrow<MessageConfig>()
+        DiscordBot.chat(messageConfig.serverShutDownMessage)
+        DiscordBot.jda.shutdown()
     }
 }
