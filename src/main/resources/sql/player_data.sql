@@ -14,5 +14,4 @@ CREATE TABLE `player_data` (
 COMMENT='プレイヤーデータ'
 COLLATE='utf8mb4_0900_ai_ci'
 ENGINE=InnoDB
-AUTO_INCREMENT=3
 ;

@@ -10,5 +10,4 @@ CREATE TABLE `command_log` (
 )
 COLLATE='utf8mb4_0900_ai_ci'
 ENGINE=InnoDB
-AUTO_INCREMENT=33
 ;
