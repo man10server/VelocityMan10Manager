@@ -56,7 +56,7 @@ object Database {
 
     fun createDatabase(config: DatabaseConfig): Database {
         return Database.connect(
-            url = "jdbc:mysql://${config.host}:${config.port}/${config.database}",
+            url = "jdbc:mysql://${config.host}:${config.port}/${config.database}?useSSL=false",
             driver = "com.mysql.cj.jdbc.Driver",
             user = config.username,
             password = config.password
