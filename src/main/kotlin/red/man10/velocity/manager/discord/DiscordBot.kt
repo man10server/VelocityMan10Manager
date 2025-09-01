@@ -58,6 +58,9 @@ object DiscordBot: ListenerAdapter() {
         adminChannel = guild?.getTextChannelById(config.adminChannelId)
         reportChannel = guild?.getTextChannelById(config.reportChannelId)
         jailChannel = guild?.getTextChannelById(config.jailChannelId)
+
+        val messageConfig = Config.getOrThrow<MessageConfig>()
+        chat(messageConfig.serverBootMessage)
     }
 
     fun chat(message: String) {
@@ -109,15 +112,5 @@ object DiscordBot: ListenerAdapter() {
             }
 
         VelocityMan10Manager.sendMessageToMinecraftPlayers(component)
-    }
-
-    override fun onReady(event: ReadyEvent) {
-        val messageConfig = Config.getOrThrow<MessageConfig>()
-        chat(messageConfig.serverBootMessage)
-    }
-
-    override fun onShutdown(event: ShutdownEvent) {
-        val messageConfig = Config.getOrThrow<MessageConfig>()
-        chat(messageConfig.serverShutdownMessage)
     }
 }
