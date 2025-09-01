@@ -75,7 +75,7 @@ class MessageConfig: AbstractConfig() {
     var discordFirstLoginMessage = "**%name%**さんがMan10サーバーに初参加しました！ **%count%**人目のプレイヤーです！"
 
     var serverBootMessage = ":ballot_box_with_check:**サーバーが起動しました**"
-    var serverShutDownMessage = ":octagonal_sign:**サーバーがシャットダウンしました**"
+    var serverShutdownMessage = ":octagonal_sign:**サーバーがシャットダウンしました**"
 
     override fun loadConfig(config: CommentedConfigurationNode) {
         val authNode = config.node("authentication")
@@ -140,7 +140,7 @@ class MessageConfig: AbstractConfig() {
         discordFirstLoginMessage = firstLoginMessageNode.node("discord").getString(discordFirstLoginMessage)
 
         serverBootMessage = config.node("serverBootMessage").getString(serverBootMessage)
-        serverShutDownMessage = config.node("serverShutDownMessage").getString(serverShutDownMessage)
+        serverShutdownMessage = config.node("serverShutdownMessage").getString(serverShutdownMessage)
     }
 
     override fun saveDefaultConfig(config: CommentedConfigurationNode) {
@@ -192,5 +192,8 @@ class MessageConfig: AbstractConfig() {
 
         config.node("discordLoginMessage").set(discordLoginMessage)
         config.node("discordLogoutMessage").set(discordLogoutMessage)
+
+        config.node("serverBootMessage").set(serverBootMessage)
+        config.node("serverShutdownMessage").set(serverShutdownMessage)
     }
 }

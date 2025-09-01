@@ -5,6 +5,8 @@ import net.dv8tion.jda.api.JDABuilder
 import net.dv8tion.jda.api.entities.Guild
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent
+import net.dv8tion.jda.api.events.session.ReadyEvent
+import net.dv8tion.jda.api.events.session.ShutdownEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
 import net.dv8tion.jda.api.requests.GatewayIntent
 import net.kyori.adventure.text.minimessage.MiniMessage
@@ -107,5 +109,15 @@ object DiscordBot: ListenerAdapter() {
             }
 
         VelocityMan10Manager.sendMessageToMinecraftPlayers(component)
+    }
+
+    override fun onReady(event: ReadyEvent) {
+        val messageConfig = Config.getOrThrow<MessageConfig>()
+        chat(messageConfig.serverBootMessage)
+    }
+
+    override fun onShutdown(event: ShutdownEvent) {
+        val messageConfig = Config.getOrThrow<MessageConfig>()
+        chat(messageConfig.serverShutdownMessage)
     }
 }
