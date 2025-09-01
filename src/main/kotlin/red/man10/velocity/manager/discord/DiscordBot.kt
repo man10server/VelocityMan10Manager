@@ -10,10 +10,12 @@ import net.dv8tion.jda.api.events.session.ShutdownEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
 import net.dv8tion.jda.api.requests.GatewayIntent
 import net.kyori.adventure.text.minimessage.MiniMessage
+import red.man10.velocity.manager.Utils.applyPlaceholders
 import red.man10.velocity.manager.VelocityMan10Manager
 import red.man10.velocity.manager.config.Config
 import red.man10.velocity.manager.config.sub.ChatConfig
 import red.man10.velocity.manager.config.sub.DiscordConfig
+import red.man10.velocity.manager.config.sub.LogConfig
 import red.man10.velocity.manager.config.sub.MessageConfig
 
 object DiscordBot: ListenerAdapter() {
@@ -92,18 +94,23 @@ object DiscordBot: ListenerAdapter() {
         if (e.channel.id != chatChannel?.id) return
         val content = e.message.contentDisplay
 
-        val config = Config.getConfig<ChatConfig>() ?: return
+        val config = Config.getOrThrow<ChatConfig>()
+        val logConfig = Config.getOrThrow<LogConfig>()
 
         val role = e.member?.roles?.firstOrNull()
         val colorHex = role?.color?.rgb?.let {
             "<#%06X>".format(it and 0xFFFFFF)
         }
 
+        val placeholders = mapOf(
+            "nickname" to (e.member?.nickname ?: e.author.name),
+            "username" to e.author.name,
+            "role" to (role?.name ?: ""),
+            "rolecolor" to (colorHex ?: "")
+        )
+
         val text = config.discordToMinecraftTextFormat
-            .replace("%nickname%", e.member?.nickname ?: e.author.name)
-            .replace("%username%", e.author.name)
-            .replace("%role%", role?.name ?: "")
-            .replace("%rolecolor%", colorHex ?: "")
+            .applyPlaceholders(placeholders)
         val component = MiniMessage.miniMessage()
             .deserialize(text)
             .replaceText {
@@ -112,5 +119,14 @@ object DiscordBot: ListenerAdapter() {
             }
 
         VelocityMan10Manager.sendMessageToMinecraftPlayers(component)
+        if (logConfig.chatDiscord) {
+            log(
+                logConfig.chatLogFormat.applyPlaceholders(
+                    placeholders + mapOf(
+                        "message" to content
+                    )
+                )
+            )
+        }
     }
 }

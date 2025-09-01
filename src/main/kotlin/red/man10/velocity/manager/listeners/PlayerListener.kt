@@ -342,7 +342,7 @@ class PlayerListener {
         }
 
         if (logConfig.chat) {
-            DiscordBot.log(
+            DiscordBot.admin(
                 logConfig.chatLogFormat.applyPlaceholders(
                     mapOf(
                         "server" to (currentServer ?: "N/A"),
@@ -363,42 +363,43 @@ class PlayerListener {
     @Subscribe
     fun onPlayerCommand(e: CommandExecuteEvent) {
         val messageConfig = Config.getOrThrow<MessageConfig>()
-        var logConfig = Config.getOrThrow<LogConfig>()
+        val logConfig = Config.getOrThrow<LogConfig>()
 
         val player = e.commandSource
         if (player !is Player) return
         val data = Database.playerDataCache[player.uniqueId] ?: return
 
         val command = e.command
+        val commandString = "/$command"
 
         if (data.isMuted()) {
             e.result = CommandExecuteEvent.CommandResult.denied()
-            VelocityMan10Manager.warning("[Muted] <${player.username}> /$command")
+            VelocityMan10Manager.warning("[Muted] <${player.username}> $commandString")
             player.sendRichMessage(messageConfig.muteMessage)
             return
         }
 
         if (data.isJailed()) {
             e.result = CommandExecuteEvent.CommandResult.denied()
-            VelocityMan10Manager.warning("[Jailed] <${player.username}> /$command")
+            VelocityMan10Manager.warning("[Jailed] <${player.username}> $commandString")
             player.sendRichMessage(messageConfig.jailOnCommandMessage)
             return
         }
 
         if (logConfig.command) {
             val currentServer = player.currentServer.orElse(null)?.serverInfo?.name ?: "N/A"
-            DiscordBot.log(
+            DiscordBot.admin(
                 logConfig.commandLogFormat.applyPlaceholders(
                     mapOf(
                         "server" to currentServer,
                         "name" to player.username,
-                        "command" to command
+                        "command" to commandString
                     )
                 )
             )
         }
         CompletableFuture.runAsync {
-            Database.addCommandLog(player, e.command, player.getServerName())
+            Database.addCommandLog(player, commandString, player.getServerName())
         }
     }
 }

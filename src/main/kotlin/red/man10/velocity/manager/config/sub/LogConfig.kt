@@ -9,11 +9,13 @@ class LogConfig: AbstractConfig() {
     var login = true
     var logout = true
     var chat = true
+    var chatDiscord = true
     var command = true
 
     var loginLogFormat = "**%name% is connected**"
     var logoutLogFormat = "**%name% is disconnected**"
     var chatLogFormat = "[CHAT] <%server%> %name%: %message%"
+    var chatDiscordLogFormat = "[DISCORD] %name%: %message%"
     var commandLogFormat = "[COMMAND] <%server%> %name%: %command%"
 
     var banLogFormat = """
@@ -42,11 +44,13 @@ class LogConfig: AbstractConfig() {
         login = enabledNode.node("login").getBoolean(login)
         logout = enabledNode.node("logout").getBoolean(logout)
         chat = enabledNode.node("chat").getBoolean(chat)
+        chatDiscord = enabledNode.node("chatDiscord").getBoolean(chatDiscord)
         command = enabledNode.node("command").getBoolean(command)
 
         loginLogFormat = config.node("loginLogFormat").getString(loginLogFormat)
         logoutLogFormat = config.node("logoutLogFormat").getString(logoutLogFormat)
         chatLogFormat = config.node("chatLogFormat").getString(chatLogFormat)
+        chatDiscordLogFormat = config.node("chatDiscordLogFormat").getString(chatDiscordLogFormat)
         commandLogFormat = config.node("commandLogFormat").getString(commandLogFormat)
 
         val punishmentNode = config.node("punishment")
@@ -68,11 +72,13 @@ class LogConfig: AbstractConfig() {
         enabledNode.node("login").set(login)
         enabledNode.node("logout").set(logout)
         enabledNode.node("chat").set(chat)
+        enabledNode.node("chatDiscord").set(chatDiscord)
         enabledNode.node("command").set(command)
 
         config.node("loginLogFormat").set(loginLogFormat)
         config.node("logoutLogFormat").set(logoutLogFormat)
         config.node("chatLogFormat").set(chatLogFormat)
+        config.node("chatDiscordLogFormat").set(chatDiscordLogFormat)
         config.node("commandLogFormat").set(commandLogFormat)
 
         val punishmentNode = config.node("punishment")
