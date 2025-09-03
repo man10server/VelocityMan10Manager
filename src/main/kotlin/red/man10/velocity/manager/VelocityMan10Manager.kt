@@ -99,13 +99,17 @@ class VelocityMan10Manager {
         CommandRegister.register(proxy)
         Database
         DiscordBot
+
+        val messageConfig = Config.getOrThrow<MessageConfig>()
+        DiscordBot.chat(messageConfig.serverBootMessage)
+
         proxy.eventManager.register(this, PlayerListener())
     }
 
     @Subscribe
     fun onProxyShutdown(e: ProxyShutdownEvent) {
         val messageConfig = Config.getOrThrow<MessageConfig>()
-        DiscordBot.chat(messageConfig.serverShutdownMessage)
+        DiscordBot.chatChannel?.sendMessage(messageConfig.serverShutdownMessage)?.complete()
         DiscordBot.jda.shutdown()
     }
 }

@@ -2,11 +2,12 @@ CREATE TABLE `message_log` (
     `id` INT NOT NULL AUTO_INCREMENT,
     `uuid` VARCHAR(36) NULL DEFAULT NULL COLLATE 'utf8mb4_0900_ai_ci',
     `player` VARCHAR(16) NULL DEFAULT NULL COLLATE 'utf8mb4_0900_ai_ci',
-    `message` TEXT NULL DEFAULT NULL COLLATE 'utf8mb4_0900_ai_ci',
+    `message` VARCHAR(256) NULL DEFAULT NULL COLLATE 'utf8mb4_0900_ai_ci',
     `server` VARCHAR(16) NULL DEFAULT NULL COLLATE 'utf8mb4_0900_ai_ci',
     `date` DATETIME NULL DEFAULT (CURRENT_TIMESTAMP),
     PRIMARY KEY (`id`) USING BTREE,
-    INDEX `uuid` (`uuid`) USING BTREE
+    INDEX `uuid` (`uuid`) USING BTREE,
+    INDEX `message` (`message`) USING BTREE
 )
 COLLATE='utf8mb4_0900_ai_ci'
 ENGINE=InnoDB

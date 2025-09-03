@@ -15,7 +15,7 @@ class LogConfig: AbstractConfig() {
     var loginLogFormat = "**%name% is connected**"
     var logoutLogFormat = "**%name% is disconnected**"
     var chatLogFormat = "[CHAT] <%server%> %name%: %message%"
-    var chatDiscordLogFormat = "[DISCORD] %name%: %message%"
+    var chatDiscordLogFormat = "[DISCORD] %username%: %message%"
     var commandLogFormat = "[COMMAND] <%server%> %name%: %command%"
 
     var banLogFormat = """

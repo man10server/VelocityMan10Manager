@@ -60,9 +60,6 @@ object DiscordBot: ListenerAdapter() {
         adminChannel = guild?.getTextChannelById(config.adminChannelId)
         reportChannel = guild?.getTextChannelById(config.reportChannelId)
         jailChannel = guild?.getTextChannelById(config.jailChannelId)
-
-        val messageConfig = Config.getOrThrow<MessageConfig>()
-        chat(messageConfig.serverBootMessage)
     }
 
     fun chat(message: String) {
@@ -120,8 +117,8 @@ object DiscordBot: ListenerAdapter() {
 
         VelocityMan10Manager.sendMessageToMinecraftPlayers(component)
         if (logConfig.chatDiscord) {
-            log(
-                logConfig.chatLogFormat.applyPlaceholders(
+            admin(
+                logConfig.chatDiscordLogFormat.applyPlaceholders(
                     placeholders + mapOf(
                         "message" to content
                     )

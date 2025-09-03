@@ -238,8 +238,6 @@ object Database {
             }
             .groupBy(playerDataTable.player, connectionLogTable.ip)
 
-        VelocityMan10Manager.logger.info(query.sql)
-
         query.forEach {
             val data = playerDataTable.createEntity(it)
             val count = it.getInt(1)
