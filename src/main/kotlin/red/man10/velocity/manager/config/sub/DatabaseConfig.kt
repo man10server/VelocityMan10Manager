@@ -11,6 +11,7 @@ class DatabaseConfig: AbstractConfig() {
     var username: String = "root"
     var password: String = ""
     var database: String = "velocity"
+    var options: String = "?useSSL=false"
 
     var playerDataTable = "player_data"
     var banIpTable = "ban_ip_list"
@@ -26,6 +27,7 @@ class DatabaseConfig: AbstractConfig() {
         username = mysql.node("username").getString("root")
         password = mysql.node("password").getString("")
         database = mysql.node("database").getString("velocity")
+        options = mysql.node("options").getString("?useSSL=false")
         val tables = config.node("tables")
         playerDataTable = tables.node("playerData").getString("player_data")
         banIpTable = tables.node("banIp").getString("ban_ip_list")
@@ -42,6 +44,7 @@ class DatabaseConfig: AbstractConfig() {
         mysql.node("username").set("root")
         mysql.node("password").set("")
         mysql.node("database").set("velocity")
+        mysql.node("options").set("?useSSL=false")
         val tables = config.node("tables")
         tables.node("playerData").set("player_data")
         tables.node("banIp").set("ban_ip_list")

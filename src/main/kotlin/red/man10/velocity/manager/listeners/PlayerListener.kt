@@ -132,10 +132,10 @@ class PlayerListener {
     @Subscribe
     fun onPlayerDisconnect(e: DisconnectEvent) {
         val player = e.player
-        val data = Database.playerDataCache[player.uniqueId] ?: return
+        val data = Database.playerDataCache[player.uniqueId]
         val config = Config.getOrThrow<MessageConfig>()
         val logConfig = Config.getOrThrow<LogConfig>()
-        val score = data.score
+        val score = data?.score ?: 0
 
         val logoutMessage = config.minecraftLogoutMessages.entries.find {
             score in it.key
