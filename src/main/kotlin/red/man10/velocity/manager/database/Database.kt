@@ -215,7 +215,7 @@ object Database {
         val query = source
             .innerJoin(playerDataTable, on = connectionLogTable.uuid eq playerDataTable.uuid)
             .select(
-                count(),
+                count().aliased("cnt"),
                 playerDataTable.player,
                 playerDataTable.uuid,
                 connectionLogTable.ip,
@@ -233,14 +233,18 @@ object Database {
                     .where {
                         connectionLogTable.player eq name
                     }
-                    .groupBy(connectionLogTable.player)
-                    .orderBy(connectionLogTable.ip.asc())
+//                    .groupBy(connectionLogTable.player)
+//                    .orderBy(connectionLogTable.ip.asc())
             }
-            .groupBy(playerDataTable.player, connectionLogTable.ip)
+            .groupBy(
+                playerDataTable.player,
+                playerDataTable.uuid,
+                connectionLogTable.ip
+            )
 
         query.forEach {
             val data = playerDataTable.createEntity(it)
-            val count = it.getInt(1)
+            val count = it.getInt("cnt")
             val ip = it[connectionLogTable.ip] ?: return@forEach
             list.add(SubAccountInfo(data, ip, count))
         }

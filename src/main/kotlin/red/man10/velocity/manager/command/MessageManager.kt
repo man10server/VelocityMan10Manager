@@ -1,4 +1,4 @@
-package red.man10.velocity.manager.command.commands.message
+package red.man10.velocity.manager.command
 
 import com.velocitypowered.api.command.CommandSource
 import com.velocitypowered.api.proxy.Player
@@ -25,7 +25,7 @@ object MessageManager {
         val config = Config.getOrThrow<CommandConfig>()
 
         var message = message
-        val japanized = VelocityMan10Manager.japanize(message)
+        val japanized = VelocityMan10Manager.Companion.japanize(message)
         if (japanized != null) {
             message += " §6($japanized)"
         }
@@ -52,7 +52,7 @@ object MessageManager {
             }
         }
 
-        val formattedMessage = VelocityMan10Manager.miniMessage(
+        val formattedMessage = VelocityMan10Manager.Companion.miniMessage(
             config.privateChatFormat
                 .replace("%sender%", senderName)
                 .replace("%receiver%", receiver.username)

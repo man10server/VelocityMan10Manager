@@ -2,8 +2,8 @@ package red.man10.velocity.manager.command
 
 import com.velocitypowered.api.proxy.ProxyServer
 import red.man10.velocity.manager.Utils
-import red.man10.velocity.manager.command.commands.message.ReplyCommand
-import red.man10.velocity.manager.command.commands.message.TellCommand
+import red.man10.velocity.manager.command.commands.ReplyCommand
+import red.man10.velocity.manager.command.commands.TellCommand
 
 object CommandRegister {
 
@@ -21,15 +21,5 @@ object CommandRegister {
                     commandManager.register(commandInstance.getMeta(commandManager), commandInstance.createCommand())
                 }
             }
-
-        for (command in listOf("tell", "msg", "message", "m", "w", "t")) {
-            val tellCommand = TellCommand(command)
-            commandManager.register(tellCommand.getMeta(commandManager), tellCommand.createCommand())
-        }
-
-        for (command in listOf("reply", "r")) {
-            val replyCommand = ReplyCommand(command)
-            commandManager.register(replyCommand.getMeta(commandManager), replyCommand.createCommand())
-        }
     }
 }

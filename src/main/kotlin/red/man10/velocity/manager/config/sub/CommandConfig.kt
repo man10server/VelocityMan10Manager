@@ -10,6 +10,27 @@ class CommandConfig: AbstractConfig() {
     var playerNotFound = "<dark_red>存在しないユーザーです"
     var errorOccurred = "<red>エラーが発生しました"
 
+    var helpMessage = """
+        <green> ============ Man10VelocityManager ============
+        <light_purple>/%command% help : このヘルプを表示します
+        <light_purple>/%command% reload : 全ての機能をリロードします
+        <red>以下のコマンドは/%command%無しでも実行できます
+        <light_purple>/%command% report : reportのヘルプを表示します
+        <light_purple>/%command% (tell, msg, message, m, w, t) : tellのヘルプを表示します
+        <light_purple>/%command% (reply, r) : replyのヘルプを表示します
+        <light_purple>/%command% mchat : チャット設定のヘルプを表示します
+        <light_purple>/%command% mban : バンのヘルプを表示します
+        <light_purple>/%command% msb : シャドウバンのヘルプを表示します
+        <light_purple>/%command% mwarn : 警告のヘルプを表示します
+        <light_purple>/%command% mjail : Jailのヘルプを表示します
+        <light_purple>/%command% mmute : ミュートのヘルプを表示します
+        <light_purple>/%command% malt : サブアカウント関連のヘルプを表示します
+        <light_purple>/%command% mserver : サーバー関連のヘルプを表示します
+        <green> ================================================
+        
+    """.trimIndent()
+    var reloaded = "<green><bold>Man10VelocityManagerの全ての機能をリロードしました"
+
     var reportHelpMessage = """
         <green><bold>〜サーバーへ報告をする〜
         <green>/report <タイトル> <本文>
@@ -102,11 +123,28 @@ class CommandConfig: AbstractConfig() {
     var altIpBanRelease = "<red><bold>IP:%ip%のIPBANを解除しました"
     var altIpBanReleaseNotFound = "<red><bold>指定されたIPアドレスはIPBANされていません"
 
+    var serverHelpMessage = """
+        <light_purple><bold>/mserver add <server> <address> <port> : サーバーを追加します
+        <light_purple><bold>/mserver remove <server> : サーバーを削除します
+        <light_purple><bold>/mserver list : サーバー一覧を表示します
+    """.trimIndent()
+    var serverIsEmpty = "<red><bold>サーバーが一つも登録されていません"
+    var serverList = """
+        <aqua><bold>登録されているサーバー一覧
+        <aqua><bold>サーバー名 / IPアドレス / ポート
+    """.trimIndent()
+    var serverListFormat = "<white><bold>%name% / %address% / %port%"
+    var serverAlreadyExists = "<red><bold>そのサーバー名は既に登録されています"
+    var serverAdded = "<green><bold>サーバーを追加しました"
+    var serverNotFound = "<red><bold>そのサーバーは登録されていません"
+    var serverRemoved = "<green><bold>サーバーを削除しました"
 
     override fun loadConfig(config: CommentedConfigurationNode) {
         cannotUseInConsole = config.node("cannotUseInConsole").getString(cannotUseInConsole)
         playerNotFound = config.node("playerNotFound").getString(playerNotFound)
         errorOccurred = config.node("errorOccurred").getString(errorOccurred)
+
+        helpMessage = config.node("helpMessage").getString(helpMessage)
 
         val reportNode = config.node("report")
         reportHelpMessage = reportNode.node("helpMessage").getString(reportHelpMessage)
@@ -177,12 +215,24 @@ class CommandConfig: AbstractConfig() {
         altIpBanned = altNode.node("ipBanned").getString(altIpBanned)
         altIpBanRelease = altNode.node("ipBanRelease").getString(altIpBanRelease)
         altIpBanReleaseNotFound = altNode.node("ipBanReleaseNotFound").getString(altIpBanReleaseNotFound)
+
+        val serverNode = config.node("server")
+        serverHelpMessage = serverNode.node("serverHelpMessage").getString(serverHelpMessage)
+        serverIsEmpty = serverNode.node("serverIsEmpty").getString(serverIsEmpty)
+        serverList = serverNode.node("serverList").getString(serverList)
+        serverListFormat = serverNode.node("serverListFormat").getString(serverListFormat)
+        serverAlreadyExists = serverNode.node("serverAlreadyExists").getString(serverAlreadyExists)
+        serverAdded = serverNode.node("serverAdded").getString(serverAdded)
+        serverNotFound = serverNode.node("serverNotFound").getString(serverNotFound)
+        serverRemoved = serverNode.node("serverRemoved").getString(serverRemoved)
     }
 
     override fun saveDefaultConfig(config: CommentedConfigurationNode) {
         config.node("cannotUseInConsole").set(cannotUseInConsole)
         config.node("playerNotFound").set(playerNotFound)
         config.node("errorOccurred").set(errorOccurred)
+
+        config.node("helpMessage").set(helpMessage)
 
         val reportNode = config.node("report")
         reportNode.node("helpMessage").set(reportHelpMessage)
@@ -253,5 +303,15 @@ class CommandConfig: AbstractConfig() {
         altNode.node("ipBanned").set(altIpBanned)
         altNode.node("ipBanRelease").set(altIpBanRelease)
         altNode.node("ipBanReleaseNotFound").set(altIpBanReleaseNotFound)
+
+        val serverNode = config.node("server")
+        serverNode.node("serverHelpMessage").set(serverHelpMessage)
+        serverNode.node("serverIsEmpty").set(serverIsEmpty)
+        serverNode.node("serverList").set(serverList)
+        serverNode.node("serverListFormat").set(serverListFormat)
+        serverNode.node("serverAlreadyExists").set(serverAlreadyExists)
+        serverNode.node("serverAdded").set(serverAdded)
+        serverNode.node("serverNotFound").set(serverNotFound)
+        serverNode.node("serverRemoved").set(serverRemoved)
     }
 }

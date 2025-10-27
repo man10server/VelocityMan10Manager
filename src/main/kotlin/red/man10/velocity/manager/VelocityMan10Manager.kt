@@ -9,6 +9,7 @@ import com.velocitypowered.api.event.proxy.ProxyShutdownEvent
 import com.velocitypowered.api.plugin.Plugin
 import com.velocitypowered.api.plugin.annotation.DataDirectory
 import com.velocitypowered.api.proxy.ProxyServer
+import com.velocitypowered.api.proxy.server.ServerInfo
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.minimessage.MiniMessage
 import org.slf4j.Logger
@@ -16,6 +17,7 @@ import red.man10.velocity.manager.command.CommandRegister
 import red.man10.velocity.manager.config.Config
 import red.man10.velocity.manager.config.sub.GeneralConfig
 import red.man10.velocity.manager.config.sub.MessageConfig
+import red.man10.velocity.manager.config.sub.ServerConfig
 import red.man10.velocity.manager.database.Database
 import red.man10.velocity.manager.discord.DiscordBot
 import red.man10.velocity.manager.listeners.PlayerListener
@@ -37,6 +39,8 @@ class VelocityMan10Manager {
         lateinit var logger: Logger
 
         val japanizerDictionary = HashMap<String, String>()
+
+        val registeredServers = ArrayList<ServerInfo>()
 
         fun sendMessageToMinecraftPlayers(component: Component) {
             proxy.allPlayers.forEach { player ->
@@ -76,8 +80,21 @@ class VelocityMan10Manager {
 
         fun reloadAll() {
             Config.load()
+            reloadServers()
             Database.reloadDatabase()
             DiscordBot.reload()
+        }
+
+        fun reloadServers() {
+            val serverConfig = Config.getOrThrow<ServerConfig>()
+            registeredServers.forEach {
+                proxy.unregisterServer(it)
+            }
+            registeredServers.clear()
+            serverConfig.servers.forEach {
+                proxy.registerServer(it)
+                registeredServers.add(it)
+            }
         }
 
         fun miniMessage(message: String): Component {
@@ -104,6 +121,8 @@ class VelocityMan10Manager {
         DiscordBot.chat(messageConfig.serverBootMessage)
 
         proxy.eventManager.register(this, PlayerListener())
+
+        reloadServers()
     }
 
     @Subscribe

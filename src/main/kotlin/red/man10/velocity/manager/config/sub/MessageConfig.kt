@@ -77,6 +77,8 @@ class MessageConfig: AbstractConfig() {
     var serverBootMessage = ":ballot_box_with_check:**サーバーが起動しました**"
     var serverShutdownMessage = ":octagonal_sign:**サーバーがシャットダウンしました**"
 
+    var alertMessageFormat = "<dark_gray>[<dark_red>Alert<dark_gray>]<white> %message%"
+
     override fun loadConfig(config: CommentedConfigurationNode) {
         val authNode = config.node("authentication")
         authenticationMessage = authNode.node("message").getString(authenticationMessage)
@@ -141,6 +143,8 @@ class MessageConfig: AbstractConfig() {
 
         serverBootMessage = config.node("serverBootMessage").getString(serverBootMessage)
         serverShutdownMessage = config.node("serverShutdownMessage").getString(serverShutdownMessage)
+
+        alertMessageFormat = config.node("alertMessageFormat").getString(alertMessageFormat)
     }
 
     override fun saveDefaultConfig(config: CommentedConfigurationNode) {
@@ -195,5 +199,7 @@ class MessageConfig: AbstractConfig() {
 
         config.node("serverBootMessage").set(serverBootMessage)
         config.node("serverShutdownMessage").set(serverShutdownMessage)
+
+        config.node("alertMessageFormat").set(alertMessageFormat)
     }
 }
