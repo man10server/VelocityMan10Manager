@@ -27,7 +27,7 @@ class WarnCommand: AbstractCommand() {
             .build()
     }
 
-    fun help(context: CommandContext<CommandSource>): Int {
+    private fun help(context: CommandContext<CommandSource>): Int {
         val commandConfig = Config.getOrThrow<CommandConfig>()
         context.source.sendRichMessage(commandConfig.warnHelpMessage)
         return Command.SINGLE_SUCCESS

@@ -1,4 +1,4 @@
-package red.man10.velocity.manager.command.commands.message
+package red.man10.velocity.manager.command.commands
 
 import com.mojang.brigadier.Command
 import com.mojang.brigadier.arguments.StringArgumentType
@@ -10,23 +10,25 @@ import com.velocitypowered.api.command.CommandSource
 import com.velocitypowered.api.proxy.Player
 import red.man10.velocity.manager.VelocityMan10Manager
 import red.man10.velocity.manager.command.AbstractCommand
+import red.man10.velocity.manager.command.MessageManager
 import red.man10.velocity.manager.config.Config
 import red.man10.velocity.manager.config.sub.CommandConfig
 
-class TellCommand(val command: String): AbstractCommand() {
+class TellCommand: AbstractCommand() {
     override fun getMeta(manager: CommandManager): CommandMeta {
-        return manager.metaBuilder(command)
+        return manager.metaBuilder("tell")
+            .aliases("msg", "message", "m", "w", "t")
             .build()
     }
 
     fun help(context: CommandContext<CommandSource>): Int {
         val commandConfig = Config.getOrThrow<CommandConfig>()
-        context.source.sendRichMessage(commandConfig.tellHelpMessage.replace("%command%", command))
+        context.source.sendRichMessage(commandConfig.tellHelpMessage.replace("%command%", context.rootNode.name))
         return Command.SINGLE_SUCCESS
     }
 
     override fun createCommand(): BrigadierCommand {
-        val node = BrigadierCommand.literalArgumentBuilder(command)
+        val node = BrigadierCommand.literalArgumentBuilder("tell")
             .requires { source -> source.hasPermission("red.man10.velocity.command.tell") }
             .executes(this::help)
             .then(
