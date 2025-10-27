@@ -22,25 +22,28 @@ class AlertCommand: AbstractCommand() {
     override fun createCommand(): BrigadierCommand {
         val node = BrigadierCommand.literalArgumentBuilder("alert")
             .requires { source -> source.hasPermission("red.man10.velocity.command.alert") }
-            .then(BrigadierCommand.requiredArgumentBuilder("内容", StringArgumentType.greedyString()))
-            .executes { context ->
-                val messageConfig = Config.getOrThrow<MessageConfig>()
+            .then(
+                BrigadierCommand.requiredArgumentBuilder("内容", StringArgumentType.greedyString())
+                    .executes { context ->
+                        val messageConfig = Config.getOrThrow<MessageConfig>()
 
-                val message = VelocityMan10Manager.miniMessage(
-                    StringArgumentType.getString(context, "内容")
-                )
+                        val message = VelocityMan10Manager.miniMessage(
+                            StringArgumentType.getString(context, "内容")
+                        )
 
-                val formattedMessage = Component.text(messageConfig.alertMessageFormat)
-                    .replaceText { replace ->
-                        replace.matchLiteral("%message%")
-                            .replacement(message)
+                        val formattedMessage = Component.text(messageConfig.alertMessageFormat)
+                            .replaceText { replace ->
+                                replace.matchLiteral("%message%")
+                                    .replacement(message)
+                            }
+
+                        VelocityMan10Manager.proxy.allPlayers.forEach {
+                            it.sendMessage(formattedMessage)
+                        }
+                        Command.SINGLE_SUCCESS
                     }
+            )
 
-                VelocityMan10Manager.proxy.allPlayers.forEach {
-                    it.sendMessage(formattedMessage)
-                }
-                Command.SINGLE_SUCCESS
-            }
 
         return BrigadierCommand(node)
     }
