@@ -6,6 +6,8 @@ import red.man10.velocity.manager.config.AbstractConfig
 class MessageConfig: AbstractConfig() {
     override val internalName: String = "message"
 
+    var failedToConnectServerMessage = "<red><bold>サーバーに接続できませんでした しばらくしてから再度お試しください"
+
     var authenticationMessage = "<white><bold>この数字をチャットに入力してください => <green><bold>%code%"
     var authenticationTitle = "<gold><bold>%code%"
     var authenticationSubtitle = "<gold><bold>↑チャットに数字を入れよう！↑"
@@ -80,6 +82,8 @@ class MessageConfig: AbstractConfig() {
     var alertMessageFormat = "<dark_gray>[<dark_red>Alert<dark_gray>]<white> %message%"
 
     override fun loadConfig(config: CommentedConfigurationNode) {
+        failedToConnectServerMessage = config.node("failedToConnectServerMessage").getString(failedToConnectServerMessage)
+
         val authNode = config.node("authentication")
         authenticationMessage = authNode.node("message").getString(authenticationMessage)
         authenticationTitle = authNode.node("title").getString(authenticationTitle)
@@ -148,6 +152,8 @@ class MessageConfig: AbstractConfig() {
     }
 
     override fun saveDefaultConfig(config: CommentedConfigurationNode) {
+        config.node("failedToConnectServerMessage").set(failedToConnectServerMessage)
+
         val authNode = config.node("authentication")
         authNode.node("message").set(authenticationMessage)
         authNode.node("title").set(authenticationTitle)

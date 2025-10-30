@@ -30,16 +30,14 @@ class AlertCommand: AbstractCommand() {
                         val message = VelocityMan10Manager.miniMessage(
                             StringArgumentType.getString(context, "内容")
                         )
-
-                        val formattedMessage = Component.text(messageConfig.alertMessageFormat)
-                            .replaceText { replace ->
-                                replace.matchLiteral("%message%")
-                                    .replacement(message)
-                            }
-
-                        VelocityMan10Manager.proxy.allPlayers.forEach {
-                            it.sendMessage(formattedMessage)
+                        val formattedMessage = VelocityMan10Manager.miniMessage(
+                            messageConfig.alertMessageFormat
+                        ).replaceText { replace ->
+                            replace.matchLiteral("%message%")
+                                .replacement(message)
                         }
+
+                        VelocityMan10Manager.sendMessageToMinecraftPlayers(formattedMessage)
                         Command.SINGLE_SUCCESS
                     }
             )

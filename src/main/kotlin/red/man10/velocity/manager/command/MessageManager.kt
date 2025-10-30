@@ -25,7 +25,7 @@ object MessageManager {
         val config = Config.getOrThrow<CommandConfig>()
 
         var message = message
-        val japanized = VelocityMan10Manager.Companion.japanize(message)
+        val japanized = VelocityMan10Manager.japanize(message)
         if (japanized != null) {
             message += " §6($japanized)"
         }

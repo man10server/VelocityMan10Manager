@@ -37,6 +37,7 @@ class AltCommand: AbstractCommand() {
     override fun createCommand(): BrigadierCommand {
         val node = BrigadierCommand.literalArgumentBuilder("malt")
             .requires { sender -> sender.hasPermission("red.man10.velocity.command.alt") }
+            .executes(this::help)
             .then(
                 BrigadierCommand.literalArgumentBuilder("sub")
                     .executes(this::help)
