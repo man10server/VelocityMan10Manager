@@ -40,8 +40,17 @@ class PlayerListener {
         val config = Config.getOrThrow<MessageConfig>()
 
         CompletableFuture.runAsync {
-            val data = Database.playerData.find { it.uuid eq player.uniqueId }
+            val data = try {
+                Database.playerData.find { it.uuid eq player.uniqueId }
+            } catch (ex: Throwable) {
+                VelocityMan10Manager.error("Error fetching player data for ${player.username}: ${ex.message}")
+                ex.printStackTrace()
+                null
+            }
             if (data == null) {
+                e.result = ResultedEvent.ComponentResult.denied(
+                    VelocityMan10Manager.miniMessage(config.failedToConnectServerMessage)
+                )
                 return@runAsync
             }
 
@@ -268,7 +277,7 @@ class PlayerListener {
                             player.createConnectionRequest(server.get()).fireAndForget()
                         }
                     }
-                } catch (e: Exception) {
+                } catch (e: Throwable) {
                     player.disconnect(Component.text("§cエラーが発生しました"))
                     VelocityMan10Manager.error("Error onPlayerChat: ${e.message}")
                     e.printStackTrace()
@@ -355,6 +364,10 @@ class PlayerListener {
 
         CompletableFuture.runAsync {
             Database.addMessageLog(player, e.message, currentServer ?: "N/A")
+        }.exceptionally {
+            VelocityMan10Manager.error("Error logging chat message: ${it.message}")
+            it.printStackTrace()
+            null
         }
 
         return null
@@ -400,6 +413,10 @@ class PlayerListener {
         }
         CompletableFuture.runAsync {
             Database.addCommandLog(player, commandString, player.getServerName())
+        }.exceptionally {
+            VelocityMan10Manager.error("Error logging command: ${it.message}")
+            it.printStackTrace()
+            null
         }
     }
 }

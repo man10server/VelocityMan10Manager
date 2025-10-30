@@ -16,6 +16,7 @@ import org.ktorm.dsl.orderBy
 import org.ktorm.dsl.select
 import org.ktorm.dsl.where
 import org.ktorm.entity.*
+import org.ktorm.expression.QueryExpression
 import red.man10.velocity.manager.VelocityMan10Manager
 import red.man10.velocity.manager.config.Config
 import red.man10.velocity.manager.config.sub.DatabaseConfig
@@ -233,15 +234,19 @@ object Database {
                     .where {
                         connectionLogTable.player eq name
                     }
-//                    .groupBy(connectionLogTable.player)
-//                    .orderBy(connectionLogTable.ip.asc())
             }
             .groupBy(
                 playerDataTable.player,
                 playerDataTable.uuid,
-                connectionLogTable.ip
+                connectionLogTable.ip,
+                playerDataTable.id,
+                playerDataTable.freezeUntil,
+                playerDataTable.muteUntil,
+                playerDataTable.jailUntil,
+                playerDataTable.banUntil,
+                playerDataTable.msbUntil,
+                playerDataTable.score
             )
-
         query.forEach {
             val data = playerDataTable.createEntity(it)
             val count = it.getInt("cnt")

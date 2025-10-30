@@ -114,8 +114,21 @@ class VelocityMan10Manager {
     @Subscribe
     fun onProxyInitialize(e: ProxyInitializeEvent) {
         CommandRegister.register(proxy)
-        Database
-        DiscordBot
+        try {
+            Database
+        } catch (ex: Throwable) {
+            error("Failed to initialize database: ${ex.message}")
+            error("Shutting down the proxy...")
+            ex.printStackTrace()
+            proxy.shutdown()
+            return
+        }
+        try {
+            DiscordBot
+        } catch (ex: Throwable) {
+            error("Failed to initialize discord bot: ${ex.message}")
+            ex.printStackTrace()
+        }
 
         val messageConfig = Config.getOrThrow<MessageConfig>()
         DiscordBot.chat(messageConfig.serverBootMessage)
