@@ -12,20 +12,20 @@ class CommandConfig: AbstractConfig() {
 
     var helpMessage = """
         <green> ============ Man10VelocityManager ============
-        <light_purple>/%command% help : このヘルプを表示します
-        <light_purple>/%command% reload : 全ての機能をリロードします
-        <red>以下のコマンドは/%command%無しでも実行できます
-        <light_purple>/%command% report : reportのヘルプを表示します
-        <light_purple>/%command% (tell, msg, message, m, w, t) : tellのヘルプを表示します
-        <light_purple>/%command% (reply, r) : replyのヘルプを表示します
-        <light_purple>/%command% mchat : チャット設定のヘルプを表示します
-        <light_purple>/%command% mban : バンのヘルプを表示します
-        <light_purple>/%command% msb : シャドウバンのヘルプを表示します
-        <light_purple>/%command% mwarn : 警告のヘルプを表示します
-        <light_purple>/%command% mjail : Jailのヘルプを表示します
-        <light_purple>/%command% mmute : ミュートのヘルプを表示します
-        <light_purple>/%command% malt : サブアカウント関連のヘルプを表示します
-        <light_purple>/%command% mserver : サーバー関連のヘルプを表示します
+        <light_purple>/mvelocity help : このヘルプを表示します
+        <light_purple>/mvelocity reload : 全ての機能をリロードします
+        <red>以下のコマンドは/mvelocity無しでも実行できます
+        <light_purple>/mvelocity report : reportのヘルプを表示します
+        <light_purple>/mvelocity (tell, msg, message, m, w, t) : tellのヘルプを表示します
+        <light_purple>/mvelocity (reply, r) : replyのヘルプを表示します
+        <light_purple>/mvelocity mchat : チャット設定のヘルプを表示します
+        <light_purple>/mvelocity mban : バンのヘルプを表示します
+        <light_purple>/mvelocity msb : シャドウバンのヘルプを表示します
+        <light_purple>/mvelocity mwarn : 警告のヘルプを表示します
+        <light_purple>/mvelocity mjail : Jailのヘルプを表示します
+        <light_purple>/mvelocity mmute : ミュートのヘルプを表示します
+        <light_purple>/mvelocity malt : サブアカウント関連のヘルプを表示します
+        <light_purple>/mvelocity mserver : サーバー関連のヘルプを表示します
         <green> ================================================
         
     """.trimIndent()
