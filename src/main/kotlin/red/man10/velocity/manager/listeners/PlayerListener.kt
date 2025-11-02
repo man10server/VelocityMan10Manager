@@ -61,7 +61,16 @@ class PlayerListener {
                 return@runAsync
             }
 
-            if (data.isBanned() || Database.banIPCache.contains(player.remoteAddress.address.hostAddress)) {
+            if (data.isBanned()) {
+                e.result = ResultedEvent.ComponentResult.denied(
+                    VelocityMan10Manager.miniMessage(
+                        data.banMessageOverride.orElse(config.banMessage)
+                    )
+                )
+                return@runAsync
+            }
+
+            if (Database.banIPCache.contains(player.remoteAddress.address.hostAddress)) {
                 e.result = ResultedEvent.ComponentResult.denied(
                     VelocityMan10Manager.miniMessage(config.banMessage)
                 )

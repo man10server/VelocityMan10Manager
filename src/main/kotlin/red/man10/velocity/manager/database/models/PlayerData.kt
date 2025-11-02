@@ -2,6 +2,7 @@ package red.man10.velocity.manager.database.models
 
 import org.ktorm.entity.Entity
 import java.time.LocalDateTime
+import java.util.Optional
 import java.util.UUID
 
 interface PlayerData: Entity<PlayerData> {
@@ -13,6 +14,7 @@ interface PlayerData: Entity<PlayerData> {
     var muteUntil: LocalDateTime?
     var jailUntil: LocalDateTime?
     var banUntil: LocalDateTime?
+    var banMessageOverride: Optional<String>
     var msbUntil: LocalDateTime?
     var score: Int
 
@@ -53,6 +55,7 @@ interface PlayerData: Entity<PlayerData> {
 
     fun resetBan() {
         banUntil = null
+        banMessageOverride = Optional.empty()
         flushChanges()
     }
 
@@ -83,6 +86,7 @@ interface PlayerData: Entity<PlayerData> {
 
     fun addBanTime(timeToAdd: Long) {
         banUntil = createOrAddTime(banUntil, timeToAdd)
+        banMessageOverride = Optional.empty()
         flushChanges()
     }
 
