@@ -6,6 +6,7 @@ CREATE TABLE `player_data` (
    `mute_until` DATETIME NULL DEFAULT NULL,
    `jail_until` DATETIME NULL DEFAULT NULL,
    `ban_until` DATETIME NULL DEFAULT NULL,
+   `ban_message_override` TEXT NULL COLLATE 'utf8mb4_0900_ai_ci',
    `msb_until` DATETIME NULL DEFAULT NULL,
    `score` INT NULL DEFAULT '0',
    PRIMARY KEY (`id`) USING BTREE,
