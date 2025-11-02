@@ -21,9 +21,7 @@ class PlayerDataTable(tableName: String): Table<PlayerData>(tableName) {
     val muteUntil = datetime("mute_until").bindTo { it.muteUntil }
     val jailUntil = datetime("jail_until").bindTo { it.jailUntil }
     val banUntil = datetime("ban_until").bindTo { it.banUntil }
-    val banMessageOverride = varchar(name = "ban_message_override")
-        .transform({ s: String? -> Optional.ofNullable(s) }, { opt: Optional<String> -> opt.orElse(null) })
-        .bindTo { it.banMessageOverride }
+    val banMessageOverride = varchar(name = "ban_message_override").bindTo { it.banMessageOverride }
     val msbUntil = datetime("msb_until").bindTo { it.msbUntil }
     val score = int("score").bindTo { it.score }
 }

@@ -63,9 +63,7 @@ class PlayerListener {
 
             if (data.isBanned()) {
                 e.result = ResultedEvent.ComponentResult.denied(
-                    VelocityMan10Manager.miniMessage(
-                        data.banMessageOverride.orElse(config.banMessage)
-                    )
+                    VelocityMan10Manager.miniMessage(data.banMessageOverride ?: config.banMessage)
                 )
                 return@runAsync
             }

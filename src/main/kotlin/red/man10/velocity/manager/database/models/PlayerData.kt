@@ -14,7 +14,7 @@ interface PlayerData: Entity<PlayerData> {
     var muteUntil: LocalDateTime?
     var jailUntil: LocalDateTime?
     var banUntil: LocalDateTime?
-    var banMessageOverride: Optional<String>
+    var banMessageOverride: String?
     var msbUntil: LocalDateTime?
     var score: Int
 
@@ -55,7 +55,7 @@ interface PlayerData: Entity<PlayerData> {
 
     fun resetBan() {
         banUntil = null
-        banMessageOverride = Optional.empty()
+        banMessageOverride = null
         flushChanges()
     }
 
@@ -86,7 +86,7 @@ interface PlayerData: Entity<PlayerData> {
 
     fun addBanTime(timeToAdd: Long) {
         banUntil = createOrAddTime(banUntil, timeToAdd)
-        banMessageOverride = Optional.empty()
+        banMessageOverride = null
         flushChanges()
     }
 
