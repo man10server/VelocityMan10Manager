@@ -20,7 +20,10 @@ class Man10VelocityCommands: AbstractCommand() {
 
     private fun help(context: CommandContext<CommandSource>): Int {
         val config = Config.getOrThrow<CommandConfig>()
-        context.source.sendRichMessage(config.helpMessage)
+        context.source.sendRichMessage(
+            config.helpMessage
+                .replace("%command%", context.rootNode.name)
+        )
         return Command.SINGLE_SUCCESS
     }
 
