@@ -45,12 +45,14 @@ class PlayerListener {
             } catch (ex: Throwable) {
                 VelocityMan10Manager.error("Error fetching player data for ${player.username}: ${ex.message}")
                 ex.printStackTrace()
-                null
-            }
-            if (data == null) {
+
                 e.result = ResultedEvent.ComponentResult.denied(
                     VelocityMan10Manager.miniMessage(config.failedToConnectServerMessage)
                 )
+                return@runAsync
+            }
+
+            if (data == null) {
                 return@runAsync
             }
 
