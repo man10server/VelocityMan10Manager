@@ -2,7 +2,6 @@ package red.man10.velocity.manager.database.models
 
 import org.ktorm.entity.Entity
 import java.time.LocalDateTime
-import java.util.Optional
 import java.util.UUID
 
 interface PlayerData: Entity<PlayerData> {
@@ -64,34 +63,37 @@ interface PlayerData: Entity<PlayerData> {
         flushChanges()
     }
 
-    private fun createOrAddTime(dateTime: LocalDateTime?, timeToAdd: Long): LocalDateTime {
-        val nonNullDateTime = dateTime ?: LocalDateTime.now()
-        return nonNullDateTime.plusSeconds(timeToAdd)
+    private fun setOrExtendExpiration(expiration: LocalDateTime?, secondsToAdd: Long): LocalDateTime {
+        val now = LocalDateTime.now()
+        val base = expiration
+            ?.takeIf { now.isBefore(it) }
+            ?: now
+        return base.plusSeconds(secondsToAdd)
     }
 
-    fun addFreezeTime(timeToAdd: Long) {
-        freezeUntil = createOrAddTime(freezeUntil, timeToAdd)
+    fun addFreezeTime(secondsToAdd: Long) {
+        freezeUntil = setOrExtendExpiration(freezeUntil, secondsToAdd)
         flushChanges()
     }
 
-    fun addMuteTime(timeToAdd: Long) {
-        muteUntil = createOrAddTime(muteUntil, timeToAdd)
+    fun addMuteTime(secondsToAdd: Long) {
+        muteUntil = setOrExtendExpiration(muteUntil, secondsToAdd)
         flushChanges()
     }
 
-    fun addJailTime(timeToAdd: Long) {
-        jailUntil = createOrAddTime(jailUntil, timeToAdd)
+    fun addJailTime(secondsToAdd: Long) {
+        jailUntil = setOrExtendExpiration(jailUntil, secondsToAdd)
         flushChanges()
     }
 
-    fun addBanTime(timeToAdd: Long) {
-        banUntil = createOrAddTime(banUntil, timeToAdd)
+    fun addBanTime(secondsToAdd: Long) {
+        banUntil = setOrExtendExpiration(banUntil, secondsToAdd)
         banMessageOverride = null
         flushChanges()
     }
 
-    fun addMSBTime(timeToAdd: Long) {
-        msbUntil = createOrAddTime(msbUntil, timeToAdd)
+    fun addMSBTime(secondsToAdd: Long) {
+        msbUntil = setOrExtendExpiration(msbUntil, secondsToAdd)
         flushChanges()
     }
 }
