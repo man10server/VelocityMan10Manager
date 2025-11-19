@@ -52,7 +52,7 @@ object MessageManager {
             }
         }
 
-        val formattedMessage = VelocityMan10Manager.Companion.miniMessage(
+        val formattedMessage = VelocityMan10Manager.miniMessage(
             config.privateChatFormat
                 .replace("%sender%", senderName)
                 .replace("%receiver%", receiver.username)
