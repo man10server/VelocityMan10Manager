@@ -30,7 +30,7 @@ class AltCommand: AbstractCommand() {
 
     fun help(context: CommandContext<CommandSource>): Int {
         val commandConfig = Config.getOrThrow<CommandConfig>()
-        context.source.sendRichMessage(commandConfig.altHelpMessage.replace("%command%", "malt"))
+        context.source.sendRichMessage(commandConfig.altHelpMessage)
         return Command.SINGLE_SUCCESS
     }
 

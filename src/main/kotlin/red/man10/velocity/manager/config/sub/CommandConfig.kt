@@ -26,6 +26,7 @@ class CommandConfig: AbstractConfig() {
         <light_purple>/mvelocity mmute : ミュートのヘルプを表示します
         <light_purple>/mvelocity malt : サブアカウント関連のヘルプを表示します
         <light_purple>/mvelocity mserver : サーバー関連のヘルプを表示します
+        <light_purple>/mvelocity modinfo : プレイヤーのmodを確認するコマンドのヘルプを表示します
         <green> ================================================
         
     """.trimIndent()
@@ -139,6 +140,17 @@ class CommandConfig: AbstractConfig() {
     var serverNotFound = "<red><bold>そのサーバーは登録されていません"
     var serverRemoved = "<green><bold>サーバーを削除しました"
 
+    var modInfoHelpMessage = """
+        <light_purple><bold>/modinfo <player> : 指定したプレイヤーのmod情報を確認します
+    """.trimIndent()
+    var modInfoNotFound = "<red><bold>Mod情報が見つかりませんでした"
+    var modInfoModInfo = """
+        <aqua><bold>%name%のmod情報
+        <light_purple><bold>タイプ: %type%
+        <aqua><bold>ModId / バージョン
+    """.trimIndent()
+    var modInfoModInfoFormat = "<light_purple><bold>%modid% / %version%"
+
     override fun loadConfig(config: CommentedConfigurationNode) {
         cannotUseInConsole = config.node("cannotUseInConsole").getString(cannotUseInConsole)
         playerNotFound = config.node("playerNotFound").getString(playerNotFound)
@@ -225,6 +237,12 @@ class CommandConfig: AbstractConfig() {
         serverAdded = serverNode.node("serverAdded").getString(serverAdded)
         serverNotFound = serverNode.node("serverNotFound").getString(serverNotFound)
         serverRemoved = serverNode.node("serverRemoved").getString(serverRemoved)
+
+        val modInfoNode = config.node("modInfo")
+        modInfoHelpMessage = modInfoNode.node("modInfoHelpMessage").getString(modInfoHelpMessage)
+        modInfoNotFound = modInfoNode.node("modInfoNotFound").getString(modInfoNotFound)
+        modInfoModInfo = modInfoNode.node("modInfo").getString(modInfoModInfo)
+        modInfoModInfoFormat = modInfoNode.node("modInfoFormat").getString(modInfoModInfoFormat)
     }
 
     override fun saveDefaultConfig(config: CommentedConfigurationNode) {
@@ -313,5 +331,11 @@ class CommandConfig: AbstractConfig() {
         serverNode.node("serverAdded").set(serverAdded)
         serverNode.node("serverNotFound").set(serverNotFound)
         serverNode.node("serverRemoved").set(serverRemoved)
+
+        val modInfoNode = config.node("modInfo")
+        modInfoNode.node("modInfoHelpMessage").set(modInfoHelpMessage)
+        modInfoNode.node("modInfoNotFound").set(modInfoNotFound)
+        modInfoNode.node("modInfo").set(modInfoModInfo)
+        modInfoNode.node("modInfoFormat").set(modInfoModInfoFormat)
     }
 }
