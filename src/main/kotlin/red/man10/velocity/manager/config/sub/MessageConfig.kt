@@ -91,6 +91,8 @@ class MessageConfig: AbstractConfig() {
 
         val punishNode = config.node("punishment")
 
+        msbMessage = punishNode.node("msbMessage").getString(msbMessage)
+
         val banNode = punishNode.node("ban")
         banMessage = banNode.node("message").getString(banMessage)
         banBroadcastMessage = banNode.node("broadcastMessage").getString(banBroadcastMessage)
@@ -160,6 +162,8 @@ class MessageConfig: AbstractConfig() {
         authNode.node("subtitle").set(authenticationSubtitle)
 
         val punishNode = config.node("punishment")
+
+        punishNode.node("msbMessage").set(msbMessage)
 
         val banNode = punishNode.node("ban")
         banNode.node("message").set(banMessage)
