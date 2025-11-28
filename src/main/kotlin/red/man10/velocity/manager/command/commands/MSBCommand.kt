@@ -1,9 +1,11 @@
 package red.man10.velocity.manager.command.commands
 
 import com.mojang.brigadier.Command
+import com.mojang.brigadier.context.CommandContext
 import com.velocitypowered.api.command.BrigadierCommand
 import com.velocitypowered.api.command.CommandManager
 import com.velocitypowered.api.command.CommandMeta
+import com.velocitypowered.api.command.CommandSource
 import red.man10.velocity.manager.Utils.getName
 import red.man10.velocity.manager.Utils.applyPlaceholders
 import red.man10.velocity.manager.VelocityMan10Manager
@@ -22,16 +24,19 @@ class MSBCommand: PunishmentCommand() {
             .build()
     }
 
+    private fun help(context: CommandContext<CommandSource>): Int {
+        val commandConfig = Config.getOrThrow<CommandConfig>()
+        context.source.sendRichMessage(commandConfig.msbHelpMessage)
+        return Command.SINGLE_SUCCESS
+    }
+
     override fun createCommand(): BrigadierCommand {
         val node = BrigadierCommand.literalArgumentBuilder("msb")
             .requires { sender -> sender.hasPermission("red.man10.velocity.command.msb") }
+            .executes(this::help)
             .then(
                 createNode(
-                    help = { context ->
-                        val commandConfig = Config.getOrThrow<CommandConfig>()
-                        context.source.sendRichMessage(commandConfig.msbHelpMessage)
-                        Command.SINGLE_SUCCESS
-                    },
+                    help = ::help,
                     execute = { context, target, duration, reason, isReset ->
                         val messageConfig = Config.getOrThrow<MessageConfig>()
                         val commandConfig = Config.getOrThrow<CommandConfig>()
@@ -62,7 +67,7 @@ class MSBCommand: PunishmentCommand() {
 
                         target.addMSBTime(duration)
 
-                        val date = DateTimeFormatter.ofPattern("yyyy/MM/dd").format(target.banUntil)
+                        val date = DateTimeFormatter.ofPattern("yyyy/MM/dd").format(target.msbUntil)
                         val placeholders = mapOf(
                             "name" to target.player,
                             "reason" to reason,

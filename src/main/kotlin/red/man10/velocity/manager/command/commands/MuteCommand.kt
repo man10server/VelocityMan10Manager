@@ -1,9 +1,11 @@
 package red.man10.velocity.manager.command.commands
 
 import com.mojang.brigadier.Command
+import com.mojang.brigadier.context.CommandContext
 import com.velocitypowered.api.command.BrigadierCommand
 import com.velocitypowered.api.command.CommandManager
 import com.velocitypowered.api.command.CommandMeta
+import com.velocitypowered.api.command.CommandSource
 import red.man10.velocity.manager.Utils.applyPlaceholders
 import red.man10.velocity.manager.Utils.getName
 import red.man10.velocity.manager.VelocityMan10Manager
@@ -21,16 +23,19 @@ class MuteCommand: PunishmentCommand() {
         return manager.metaBuilder("mmute").build()
     }
 
+    private fun help(context: CommandContext<CommandSource>): Int {
+        val commandConfig = Config.getOrThrow<CommandConfig>()
+        context.source.sendRichMessage(commandConfig.muteHelpMessage)
+        return Command.SINGLE_SUCCESS
+    }
+
     override fun createCommand(): BrigadierCommand {
         val node = BrigadierCommand.literalArgumentBuilder("mmute")
             .requires { sender -> sender.hasPermission("red.man10.velocity.command.mute") }
+            .executes(this::help)
             .then(
                 createNode(
-                    help = { context ->
-                        val commandConfig = Config.getOrThrow<CommandConfig>()
-                        context.source.sendRichMessage(commandConfig.muteHelpMessage)
-                        Command.SINGLE_SUCCESS
-                    },
+                    help = ::help,
                     execute = { context, target, duration, reason, isReset ->
                         val commandConfig = Config.getOrThrow<CommandConfig>()
                         val messageConfig = Config.getOrThrow<MessageConfig>()
