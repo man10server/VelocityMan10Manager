@@ -48,7 +48,7 @@ class MSBCommand: PunishmentCommand() {
                                 return@createNode
                             }
 
-                            target.resetBan()
+                            target.resetMSB()
 
                             val placeholdersRelease = mapOf(
                                 "name" to target.player,
