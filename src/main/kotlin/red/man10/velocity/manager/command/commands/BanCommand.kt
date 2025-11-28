@@ -1,9 +1,11 @@
 package red.man10.velocity.manager.command.commands
 
 import com.mojang.brigadier.Command
+import com.mojang.brigadier.context.CommandContext
 import com.velocitypowered.api.command.BrigadierCommand
 import com.velocitypowered.api.command.CommandManager
 import com.velocitypowered.api.command.CommandMeta
+import com.velocitypowered.api.command.CommandSource
 import red.man10.velocity.manager.Utils.getName
 import red.man10.velocity.manager.Utils.applyPlaceholders
 import red.man10.velocity.manager.VelocityMan10Manager
@@ -22,16 +24,19 @@ class BanCommand: PunishmentCommand() {
             .build()
     }
 
+    private fun help(context: CommandContext<CommandSource>): Int {
+        val commandConfig = Config.getOrThrow<CommandConfig>()
+        context.source.sendRichMessage(commandConfig.banHelpMessage)
+        return Command.SINGLE_SUCCESS
+    }
+
     override fun createCommand(): BrigadierCommand {
         val node = BrigadierCommand.literalArgumentBuilder("mban")
             .requires { sender -> sender.hasPermission("red.man10.velocity.command.ban") }
+            .executes(this::help)
             .then(
                 createNode(
-                    help = { context ->
-                        val commandConfig = Config.getOrThrow<CommandConfig>()
-                        context.source.sendRichMessage(commandConfig.banHelpMessage)
-                        Command.SINGLE_SUCCESS
-                    },
+                    help = ::help,
                     execute = { context, target, duration, reason, isReset ->
                         val messageConfig = Config.getOrThrow<MessageConfig>()
                         val commandConfig = Config.getOrThrow<CommandConfig>()
