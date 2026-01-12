@@ -141,6 +141,12 @@ class PlayerListener {
                 val server = VelocityMan10Manager.proxy.getServer(serverConfig.jail)
                 if (server.isPresent) {
                     player.createConnectionRequest(server.get()).fireAndForget()
+                } else {
+                    player.disconnect(
+                        VelocityMan10Manager.miniMessage(
+                            config.jailMessage.applyPlaceholders(reasonMap)
+                        )
+                    )
                 }
             }
             return
