@@ -79,7 +79,7 @@ class JailCommand: PunishmentCommand() {
 
                         target.addJailTime(duration)
 
-                        val date = DateTimeFormatter.ofPattern("yyyy/MM/dd").format(target.banUntil)
+                        val date = DateTimeFormatter.ofPattern("yyyy/MM/dd").format(target.jailUntil)
                         val placeholders = mapOf(
                             "name" to target.player,
                             "reason" to reason,
