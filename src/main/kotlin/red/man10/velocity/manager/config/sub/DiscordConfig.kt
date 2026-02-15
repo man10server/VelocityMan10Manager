@@ -6,6 +6,8 @@ import red.man10.velocity.manager.config.AbstractConfig
 class DiscordConfig: AbstractConfig() {
     override val internalName = "discord"
 
+    var enabled = true
+
     var token = ""
     var guildId: Long = 0
 
@@ -17,6 +19,7 @@ class DiscordConfig: AbstractConfig() {
     var jailChannelId: Long = 0
 
     override fun loadConfig(config: CommentedConfigurationNode) {
+        enabled = config.node("enabled").getBoolean(true)
         token = config.node("token").getString("")
         guildId = config.node("guildId").getLong(0)
         val channelsNode = config.node("channels")
@@ -29,6 +32,7 @@ class DiscordConfig: AbstractConfig() {
     }
 
     override fun saveDefaultConfig(config: CommentedConfigurationNode) {
+        config.node("enabled").set(true)
         config.node("token").set("")
         config.node("guildId").set(0)
         val channelsNode = config.node("channels")

@@ -20,7 +20,7 @@ import red.man10.velocity.manager.config.sub.MessageConfig
 
 object DiscordBot: ListenerAdapter() {
 
-    lateinit var jda: JDA
+    var jda: JDA? = null
 
     var guild: Guild? = null
     var chatChannel: TextChannel? = null
@@ -37,10 +37,14 @@ object DiscordBot: ListenerAdapter() {
     fun reload() {
         val config = Config.getOrThrow<DiscordConfig>()
         try {
-            if (::jda.isInitialized) {
-                jda.shutdown()
+            jda?.shutdown()
+            jda = null
+
+            if (!config.enabled) {
+                return
             }
-            jda = JDABuilder.createDefault(config.token)
+
+            val jda = JDABuilder.createDefault(config.token)
                 .enableIntents(
                     GatewayIntent.MESSAGE_CONTENT,
                     GatewayIntent.GUILD_MESSAGES,
@@ -49,11 +53,12 @@ object DiscordBot: ListenerAdapter() {
                 .addEventListeners(this)
                 .build()
             jda.awaitReady()
+            this.jda = jda
         } catch (e: Exception) {
             throw IllegalStateException("Failed to initialize JDA", e)
         }
 
-        guild = jda.getGuildById(config.guildId)
+        guild = jda?.getGuildById(config.guildId)
         chatChannel = guild?.getTextChannelById(config.chatChannelId)
         systemChannel = guild?.getTextChannelById(config.systemChannelId)
         logChannel = guild?.getTextChannelById(config.logChannelId)
@@ -87,7 +92,7 @@ object DiscordBot: ListenerAdapter() {
     }
 
     override fun onMessageReceived(e: MessageReceivedEvent) {
-        if (e.author == jda.selfUser) return
+        if (e.author == jda?.selfUser) return
         if (e.channel.id != chatChannel?.id) return
         val content = e.message.contentDisplay
 
