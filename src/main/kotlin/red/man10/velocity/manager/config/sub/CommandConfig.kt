@@ -21,7 +21,6 @@ class CommandConfig: AbstractConfig() {
         <light_purple>/mvelocity mchat : チャット設定のヘルプを表示します
         <light_purple>/mvelocity mban : バンのヘルプを表示します
         <light_purple>/mvelocity msb : シャドウバンのヘルプを表示します
-        <light_purple>/mvelocity mwarn : 警告のヘルプを表示します
         <light_purple>/mvelocity mjail : Jailのヘルプを表示します
         <light_purple>/mvelocity mmute : ミュートのヘルプを表示します
         <light_purple>/mvelocity malt : サブアカウント関連のヘルプを表示します
@@ -86,9 +85,6 @@ class CommandConfig: AbstractConfig() {
     var msbAlreadyReleased = "<red><bold>このユーザーは既にMSB解除されています！"
     var msbBanned = "<red><bold>%name%を「%reason%」の理由でBANしました"
     var msbRelease = "<red><bold>%name%のMSBを解除しました"
-    var warnHelpMessage = """
-        <light_purple><bold>/mwarn <player> <減らすスコア> <理由>
-    """.trimIndent()
     var jailHelpMessage = """
         <light_purple><bold>/mjail <player> <期間(d/h/m/0k/reset)> <理由>
         <light_purple><bold>/mjail <player> preset <プリセット名>
@@ -204,9 +200,6 @@ class CommandConfig: AbstractConfig() {
         msbBanned = msbNode.node("msbBanned").getString(msbBanned)
         msbRelease = msbNode.node("msbRelease").getString(msbRelease)
 
-        val warnNode = punishmentNode.node("warn")
-        warnHelpMessage = warnNode.node("warnHelpMessage").getString(warnHelpMessage)
-
         val jailNode = punishmentNode.node("jail")
         jailHelpMessage = jailNode.node("jailHelpMessage").getString(jailHelpMessage)
         jailAlreadyReleased = jailNode.node("alreadyReleased").getString(jailAlreadyReleased)
@@ -297,9 +290,6 @@ class CommandConfig: AbstractConfig() {
         msbNode.node("alreadyReleased").set(msbAlreadyReleased)
         msbNode.node("msbBanned").set(msbBanned)
         msbNode.node("msbRelease").set(msbRelease)
-
-        val warnNode = punishmentNode.node("warn")
-        warnNode.node("warnHelpMessage").set(warnHelpMessage)
 
         val jailNode = punishmentNode.node("jail")
         jailNode.node("jailHelpMessage").set(jailHelpMessage)

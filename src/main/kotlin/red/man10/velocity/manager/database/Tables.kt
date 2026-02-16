@@ -9,7 +9,6 @@ import red.man10.velocity.manager.database.models.CommandLog
 import red.man10.velocity.manager.database.models.ConnectionLog
 import red.man10.velocity.manager.database.models.MessageLog
 import red.man10.velocity.manager.database.models.PlayerData
-import red.man10.velocity.manager.database.models.ScoreLog
 import java.util.Optional
 import java.util.UUID
 
@@ -31,17 +30,6 @@ class BanIPTable(tableName: String): Table<BanIP>(tableName) {
     val ipAddress = varchar("ip_address").bindTo { it.ipAddress }
     val date = datetime("date").bindTo { it.date }
     val reason = varchar("reason").bindTo { it.reason }
-}
-
-class ScoreLogTable(tableName: String): Table<ScoreLog>(tableName) {
-    val id = int("id").primaryKey().bindTo { it.id }
-    val uuid = varchar("uuid").transform({ UUID.fromString(it) }, { it.toString() }).bindTo { it.uuid }
-    val player = varchar("player").bindTo { it.player }
-    val score = int("score").bindTo { it.score }
-    val note = varchar("note").bindTo { it.note }
-    val issuer = varchar("issuer").bindTo { it.issuer }
-    val nowScore = int("now_score").bindTo { it.nowScore }
-    val date = datetime("date").bindTo { it.date }
 }
 
 class ConnectionLogTable(tableName: String): Table<ConnectionLog>(tableName) {

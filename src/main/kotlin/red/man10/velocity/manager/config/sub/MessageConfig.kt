@@ -25,18 +25,15 @@ class MessageConfig: AbstractConfig() {
         If you do not remember it, please report it to #report on the official Man10 Discord.
     """.trimIndent()
     var banBroadcastMessage = """
-        <red><bold>%name%は「%reason%」の理由により、1000ポイント引かれ、BANされました！
+        <red><bold>%name%は「%reason%」の理由により、BANされました！
         <red><bold>解除日:%date%
     """.trimIndent()
     var banBroadcastDiscordMessage = """
-        **%name%は「%reason%」の理由により、1000ポイント引かれ、BANされました！**
+        **%name%は「%reason%」の理由により、BANされました！**
         **解除日:%date%**
     """.trimIndent()
     var banReleaseMessage = "<red><bold>%name%はBAN解除されました"
     var banReleaseDiscordMessage = "**%name%のBANが解除されました**"
-    var warnMessage = "<red><bold>あなたは「%reason%」の理由により、%score%ポイント引かれ、警告されました！"
-    var warnBroadcastMessage = "<red>%name%は「%reason%」の理由により%score%ポイント引かれ、警告されました！"
-    var warnBroadcastDiscordMessage = "**%name%は「%reason%」の理由により%score%ポイント引かれ、警告されました！**"
     var muteMessage = "<yellow>あなたはミュートされています！"
     var muteReleaseMessage = "<red><bold>%name%はミュート解除されました"
     var muteReleaseDiscordMessage = "**%name%はミュート解除されました**"
@@ -49,26 +46,24 @@ class MessageConfig: AbstractConfig() {
         **解除日:%date%**
     """.trimIndent()
     var jailMessage = "<red><bold>あなたは「%reason%」により、現在島にいます！"
-    var jailedMessage = "<red><bold>あなたは「%reason%」の理由により、300ポイント引かれ、島流しにされました！"
+    var jailedMessage = "<red><bold>あなたは「%reason%」の理由により、島流しにされました！"
     var jailOnCommandMessage = "<yellow>あなたは島流しにあっています！"
     var jailTitle = "<red><bold>あなたは島にいます"
     var jailSubtitle = ""
     var jailBroadcastMessage = """
-        <red><bold>%name%は「%reason%」の理由により、300ポイント引かれ、Jailされました！
+        <red><bold>%name%は「%reason%」の理由により、Jailされました！
         <red><bold>釈放日:%date%
     """.trimIndent()
     var jailBroadcastDiscordMessage = """
-        **%name%は「%reason%」の理由により、300ポイント引かれ、Jailされました！**
+        **%name%は「%reason%」の理由により、Jailされました！**
         **釈放日:%date%**
     """.trimIndent()
     var jailReleaseMessage = "<red<bold>%name%は釈放されました"
     var jailReleaseDiscordMessage = "**%name%は釈放されました**"
 
-    // スコアに応じたログイン・ログアウトメッセージ
-    // %score% スコア
     // %name% ユーザー名
-    var minecraftLoginMessages = mutableMapOf<IntRange, String>()
-    var minecraftLogoutMessages = mutableMapOf<IntRange, String>()
+    var minecraftLoginMessage = "<yellow><bold>%name%がMan10Networkにログインしました"
+    var minecraftLogoutMessage = "<yellow><bold>%name%がMan10Networkからログアウトしました"
 
     var discordLoginMessage = "**%name%がログインしました**"
     var discordLogoutMessage = "**%name%がログアウトしました**"
@@ -100,11 +95,6 @@ class MessageConfig: AbstractConfig() {
         banReleaseMessage = banNode.node("releaseMessage").getString(banReleaseMessage)
         banReleaseDiscordMessage = banNode.node("releaseDiscordMessage").getString(banReleaseDiscordMessage)
 
-        val warnNode = punishNode.node("warn")
-        warnMessage = warnNode.node("message").getString(warnMessage)
-        warnBroadcastMessage = warnNode.node("broadcastMessage").getString(warnBroadcastMessage)
-        warnBroadcastDiscordMessage = warnNode.node("broadcastDiscordMessage").getString(warnBroadcastDiscordMessage)
-
         val muteNode = punishNode.node("mute")
         muteMessage = muteNode.node("message").getString(muteMessage)
         muteReleaseMessage = muteNode.node("releaseMessage").getString(muteReleaseMessage)
@@ -122,23 +112,8 @@ class MessageConfig: AbstractConfig() {
         jailReleaseMessage = jailNode.node("releaseMessage").getString(jailReleaseMessage)
         jailReleaseDiscordMessage = jailNode.node("releaseDiscordMessage").getString(jailReleaseDiscordMessage)
 
-        val loginMessages = config.node("minecraftLoginMessages").childrenMap()
-        minecraftLoginMessages.clear()
-        loginMessages.forEach { (key, value) ->
-            val range = key.toString().split("..").mapNotNull { it.toIntOrNull() }
-            if (range.size == 2) {
-                minecraftLoginMessages[range[0]..range[1]] = value.getString("")
-            }
-        }
-
-        val logoutMessages = config.node("minecraftLogoutMessages").childrenMap()
-        minecraftLogoutMessages.clear()
-        logoutMessages.forEach { (key, value) ->
-            val range = key.toString().split("..").mapNotNull { it.toIntOrNull() }
-            if (range.size == 2) {
-                minecraftLogoutMessages[range[0]..range[1]] = value.getString("")
-            }
-        }
+        minecraftLoginMessage = config.node("minecraftLoginMessage").getString(minecraftLoginMessage)
+        minecraftLogoutMessage = config.node("minecraftLogoutMessage").getString(minecraftLogoutMessage)
 
         discordLoginMessage = config.node("discordLoginMessage").getString(discordLoginMessage)
         discordLogoutMessage = config.node("discordLogoutMessage").getString(discordLogoutMessage)
@@ -172,11 +147,6 @@ class MessageConfig: AbstractConfig() {
         banNode.node("releaseMessage").set(banReleaseMessage)
         banNode.node("releaseDiscordMessage").set(banReleaseDiscordMessage)
 
-        val warnNode = punishNode.node("warn")
-        warnNode.node("message").set(warnMessage)
-        warnNode.node("broadcastMessage").set(warnBroadcastMessage)
-        warnNode.node("broadcastDiscordMessage").set(warnBroadcastDiscordMessage)
-
         val muteNode = punishNode.node("mute")
         muteNode.node("message").set(muteMessage)
         muteNode.node("releaseMessage").set(muteReleaseMessage)
@@ -194,11 +164,8 @@ class MessageConfig: AbstractConfig() {
         jailNode.node("releaseMessage").set(jailReleaseMessage)
         jailNode.node("releaseDiscordMessage").set(jailReleaseDiscordMessage)
 
-        val minecraftLoginMessagesNode = config.node("minecraftLoginMessages")
-        minecraftLoginMessagesNode.node("0..10000").set("<yellow>%name%がMan10Networkにログインしました スコア:%score%ポイント")
-
-        val minecraftLogoutMessagesNode = config.node("minecraftLogoutMessages")
-        minecraftLogoutMessagesNode.node("0..10000").set("<yellow>%name%がMan10Networkからログアウトしました")
+        config.node("minecraftLoginMessage").set(minecraftLoginMessage)
+        config.node("minecraftLogoutMessage").set(minecraftLogoutMessage)
 
         val firstLoginMessageNode = config.node("firstLoginMessage")
         firstLoginMessageNode.node("minecraft").set(minecraftFirstLoginMessage)

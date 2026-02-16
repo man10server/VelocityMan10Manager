@@ -15,7 +15,6 @@ class DatabaseConfig: AbstractConfig() {
 
     var playerDataTable = "player_data"
     var banIpTable = "ban_ip_list"
-    var scoreLogTable = "score_log"
     var connectionLogTable = "connection_log"
     var messageLogTable = "message_log"
     var commandLogTable = "command_log"
@@ -31,7 +30,6 @@ class DatabaseConfig: AbstractConfig() {
         val tables = config.node("tables")
         playerDataTable = tables.node("playerData").getString("player_data")
         banIpTable = tables.node("banIp").getString("ban_ip_list")
-        scoreLogTable = tables.node("scoreLog").getString("score_log")
         connectionLogTable = tables.node("connectionLog").getString("connection_log")
         messageLogTable = tables.node("messageLog").getString("message_log")
         commandLogTable = tables.node("commandLog").getString("command_log")
@@ -48,7 +46,6 @@ class DatabaseConfig: AbstractConfig() {
         val tables = config.node("tables")
         tables.node("playerData").set("player_data")
         tables.node("banIp").set("ban_ip_list")
-        tables.node("scoreLog").set("score_log")
         tables.node("connectionLog").set("connection_log")
         tables.node("messageLog").set("message_log")
         tables.node("commandLog").set("command_log")

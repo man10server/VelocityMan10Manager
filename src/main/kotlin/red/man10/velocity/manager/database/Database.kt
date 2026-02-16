@@ -2,30 +2,14 @@ package red.man10.velocity.manager.database
 
 import com.velocitypowered.api.proxy.Player
 import org.ktorm.database.Database
-import org.ktorm.dsl.and
-import org.ktorm.dsl.asc
-import org.ktorm.dsl.count
-import org.ktorm.dsl.eq
-import org.ktorm.dsl.forEach
-import org.ktorm.dsl.from
-import org.ktorm.dsl.groupBy
-import org.ktorm.dsl.inList
-import org.ktorm.dsl.innerJoin
-import org.ktorm.dsl.like
-import org.ktorm.dsl.orderBy
-import org.ktorm.dsl.select
-import org.ktorm.dsl.where
-import org.ktorm.entity.*
-import org.ktorm.expression.QueryExpression
-import red.man10.velocity.manager.VelocityMan10Manager
+import org.ktorm.dsl.*
+import org.ktorm.entity.add
+import org.ktorm.entity.find
+import org.ktorm.entity.forEach
+import org.ktorm.entity.sequenceOf
 import red.man10.velocity.manager.config.Config
 import red.man10.velocity.manager.config.sub.DatabaseConfig
-import red.man10.velocity.manager.database.models.BanIP
-import red.man10.velocity.manager.database.models.CommandLog
-import red.man10.velocity.manager.database.models.ConnectionLog
-import red.man10.velocity.manager.database.models.MessageLog
-import red.man10.velocity.manager.database.models.PlayerData
-import red.man10.velocity.manager.database.models.ScoreLog
+import red.man10.velocity.manager.database.models.*
 import java.time.Duration
 import java.time.LocalDateTime
 import java.util.UUID
@@ -37,14 +21,12 @@ object Database {
 
     lateinit var playerDataTable: PlayerDataTable
     lateinit var banIPTable: BanIPTable
-    lateinit var scoreLogTable: ScoreLogTable
     lateinit var connectionLogTable: ConnectionLogTable
     lateinit var commandLogTable: CommandLogTable
     lateinit var messageLogTable: MessageLogTable
 
     val playerData get() = database.sequenceOf(playerDataTable)
     val banIP get() = database.sequenceOf(banIPTable)
-    val scoreLog get() = database.sequenceOf(scoreLogTable)
     val connectionLog get() = database.sequenceOf(connectionLogTable)
     val commandLog get() = database.sequenceOf(commandLogTable)
     val messageLog get() = database.sequenceOf(messageLogTable)
@@ -74,7 +56,6 @@ object Database {
         database = createDatabase(config)
         playerDataTable = PlayerDataTable(config.playerDataTable)
         banIPTable = BanIPTable(config.banIpTable)
-        scoreLogTable = ScoreLogTable(config.scoreLogTable)
         connectionLogTable = ConnectionLogTable(config.connectionLogTable)
         messageLogTable = MessageLogTable(config.messageLogTable)
         commandLogTable = CommandLogTable(config.commandLogTable)
@@ -108,19 +89,6 @@ object Database {
         log.delete()
         updateBanIPCache()
         return true
-    }
-
-    fun getJailedReason(uuid: UUID): String? {
-        val log = scoreLog
-            .filter { it.uuid eq uuid and (it.note like "%Jail") }
-            .sortedByDescending { it.id }
-            .firstOrNull()?.note ?: return null
-
-        val reason = log
-            .replace("[give]:", "")
-            .replace("によりJail", "")
-
-        return reason
     }
 
     fun addCommandLog(
@@ -183,25 +151,6 @@ object Database {
         log.flushChanges()
 
         connectedTime.remove(key)
-    }
-
-    fun giveScore(
-        playerUUID: UUID,
-        score: Int,
-        note: String
-    ) {
-        val data = playerData.find { it.uuid eq playerUUID } ?: return
-        data.score += score
-        data.flushChanges()
-
-        val log = ScoreLog {
-            this.uuid = data.uuid
-            this.player = data.player
-            this.score = score
-            this.note = note
-            this.date = LocalDateTime.now()
-        }
-        scoreLog.add(log)
     }
 
     data class SubAccountInfo(

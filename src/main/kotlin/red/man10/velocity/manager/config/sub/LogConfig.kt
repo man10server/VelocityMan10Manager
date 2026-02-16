@@ -25,7 +25,6 @@ class LogConfig: AbstractConfig() {
     var banReleaseLogFormat = "%name%は「%reason%」の理由によりBAN解除されました(解除者:%punisher%)"
     var msbLogFormat = "%name%は「%reason%」の理由により、MSBされました！(処罰者:%punisher%)"
     var msbReleaseLogFormat = "%name%は「%reason%」の理由により、MSB解除されました(解除者:%punisher%)"
-    var warnLogFormat = "%name%は「%reason%」の理由により%score%ポイント引かれ、警告されました！(処罰者:%punisher%)"
     var muteLogFormat = """
         %name%は「%reason%」の理由によりミュートされました！(処罰者:%punisher%)
         解除日:%date%
@@ -58,7 +57,6 @@ class LogConfig: AbstractConfig() {
         banReleaseLogFormat = punishmentNode.node("banReleaseLogFormat").getString(banReleaseLogFormat)
         msbLogFormat = punishmentNode.node("msbLogFormat").getString(msbLogFormat)
         msbReleaseLogFormat = punishmentNode.node("msbReleaseLogFormat").getString(msbReleaseLogFormat)
-        warnLogFormat = punishmentNode.node("warnLogFormat").getString(warnLogFormat)
         muteLogFormat = punishmentNode.node("muteLogFormat").getString(muteLogFormat)
         muteReleaseLogFormat = punishmentNode.node("muteReleaseLogFormat").getString(muteReleaseLogFormat)
         jailLogFormat = punishmentNode.node("jailLogFormat").getString(jailLogFormat)
@@ -86,7 +84,6 @@ class LogConfig: AbstractConfig() {
         punishmentNode.node("banReleaseLogFormat").set(banReleaseLogFormat)
         punishmentNode.node("msbLogFormat").set(msbLogFormat)
         punishmentNode.node("msbReleaseLogFormat").set(msbReleaseLogFormat)
-        punishmentNode.node("warnLogFormat").set(warnLogFormat)
         punishmentNode.node("muteLogFormat").set(muteLogFormat)
         punishmentNode.node("muteReleaseLogFormat").set(muteReleaseLogFormat)
         punishmentNode.node("jailLogFormat").set(jailLogFormat)

@@ -91,29 +91,22 @@ class PlayerListener {
         val config = Config.getOrThrow<MessageConfig>()
         val logConfig = Config.getOrThrow<LogConfig>()
 
-        val score = data?.score ?: 0
-
-        val loginMessage = config.minecraftLoginMessages.entries.find {
-            score in it.key
-        }?.value ?: "<dark_red>エラー メッセージ未定義"
-
-        val nameScore = mapOf(
-            "name" to player.username,
-            "score" to score.toString()
+        val nameMap = mapOf(
+            "name" to player.username
         )
 
         VelocityMan10Manager.sendMessageToMinecraftPlayers(
             VelocityMan10Manager.miniMessage(
-                loginMessage.applyPlaceholders(nameScore)
+                config.minecraftLoginMessage.applyPlaceholders(nameMap)
             )
         )
         if (logConfig.login) {
             DiscordBot.admin(
-                logConfig.loginLogFormat.applyPlaceholders(nameScore)
+                logConfig.loginLogFormat.applyPlaceholders(nameMap)
             )
         }
         DiscordBot.chat(
-            config.discordLoginMessage.applyPlaceholders(nameScore)
+            config.discordLoginMessage.applyPlaceholders(nameMap)
         )
 
         if (data == null) {
@@ -123,17 +116,17 @@ class PlayerListener {
 
         if (data.isJailed()) {
             val serverConfig = Config.getOrThrow<ServerConfig>()
-            val reason = Database.getJailedReason(data.uuid) ?: "不明"
-            val reasonMap = mapOf("reason" to reason)
+//            val reason = Database.getJailedReason(data.uuid) ?: "不明"
+//            val reasonMap = mapOf("reason" to reason)
             player.sendMessage(
                 VelocityMan10Manager.miniMessage(
-                    config.jailMessage.applyPlaceholders(reasonMap)
+                    config.jailMessage
                 )
             )
             player.showTitle(
                 Title.title(
-                    VelocityMan10Manager.miniMessage(config.jailTitle.applyPlaceholders(reasonMap)),
-                    VelocityMan10Manager.miniMessage(config.jailSubtitle.applyPlaceholders(reasonMap))
+                    VelocityMan10Manager.miniMessage(config.jailTitle),
+                    VelocityMan10Manager.miniMessage(config.jailSubtitle)
                 )
             )
             val currentServer = player.currentServer.orElse(null)?.serverInfo?.name
@@ -144,7 +137,7 @@ class PlayerListener {
                 } else {
                     player.disconnect(
                         VelocityMan10Manager.miniMessage(
-                            config.jailMessage.applyPlaceholders(reasonMap)
+                            config.jailMessage
                         )
                     )
                 }
@@ -156,32 +149,25 @@ class PlayerListener {
     @Subscribe
     fun onPlayerDisconnect(e: DisconnectEvent) {
         val player = e.player
-        val data = Database.playerDataCache[player.uniqueId]
         val config = Config.getOrThrow<MessageConfig>()
         val logConfig = Config.getOrThrow<LogConfig>()
-        val score = data?.score ?: 0
 
-        val logoutMessage = config.minecraftLogoutMessages.entries.find {
-            score in it.key
-        }?.value ?: "<dark_red>エラー メッセージ未定義"
-
-        val nameScore = mapOf(
-            "name" to player.username,
-            "score" to score.toString()
+        val nameMap = mapOf(
+            "name" to player.username
         )
 
         VelocityMan10Manager.sendMessageToMinecraftPlayers(
             VelocityMan10Manager.miniMessage(
-                logoutMessage.applyPlaceholders(nameScore)
+                config.minecraftLogoutMessage.applyPlaceholders(nameMap)
             )
         )
         if (logConfig.logout) {
             DiscordBot.admin(
-                logConfig.logoutLogFormat.applyPlaceholders(nameScore)
+                logConfig.logoutLogFormat.applyPlaceholders(nameMap)
             )
         }
         DiscordBot.chat(
-            config.discordLogoutMessage.applyPlaceholders(nameScore)
+            config.discordLogoutMessage.applyPlaceholders(nameMap)
         )
 
         Database.playerDataCache.remove(player.uniqueId)

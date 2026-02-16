@@ -9,7 +9,6 @@ class PunishmentConfig: AbstractConfig() {
 
     var announceBan = false
     var announceAltBan = false
-    var announceWarn = false
     var announceMute = false
     var announceJail = false
 
@@ -20,7 +19,6 @@ class PunishmentConfig: AbstractConfig() {
         val announceNode = config.node("announce")
         announceBan = announceNode.node("ban").getBoolean(false)
         announceAltBan = announceNode.node("altBan").getBoolean(false)
-        announceWarn = announceNode.node("warn").getBoolean(false)
         announceMute = announceNode.node("mute").getBoolean(false)
         announceJail = announceNode.node("jail").getBoolean(false)
 
