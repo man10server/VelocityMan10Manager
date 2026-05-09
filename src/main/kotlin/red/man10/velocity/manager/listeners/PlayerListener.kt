@@ -53,6 +53,9 @@ class PlayerListener {
             }
 
             if (data == null) {
+                e.result = ResultedEvent.ComponentResult.denied(
+                    VelocityMan10Manager.miniMessage(config.failedToConnectServerMessage)
+                )
                 return@runAsync
             }
 
