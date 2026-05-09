@@ -141,7 +141,7 @@ class VelocityMan10Manager {
     @Subscribe
     fun onProxyShutdown(e: ProxyShutdownEvent) {
         val messageConfig = Config.getOrThrow<MessageConfig>()
-        DiscordBot.chatChannel?.sendMessage(messageConfig.serverShutdownMessage)?.complete()
+        DiscordBot.chat(messageConfig.serverShutdownMessage)
         DiscordBot.jda?.shutdown()
     }
 }

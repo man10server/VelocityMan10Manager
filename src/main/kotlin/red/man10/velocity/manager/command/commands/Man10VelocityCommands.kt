@@ -47,7 +47,6 @@ class Man10VelocityCommands: AbstractCommand() {
             .then(MSBCommand().createCommand().node)
             .then(MuteCommand().createCommand().node)
             .then(JailCommand().createCommand().node)
-            .then(WarnCommand().createCommand().node)
             .then(ChatSettingCommand().createCommand().node)
             .then(AltCommand().createCommand().node)
             .then(AlertCommand().createCommand().node)

@@ -58,7 +58,7 @@ class MessageConfig: AbstractConfig() {
         **%name%は「%reason%」の理由により、Jailされました！**
         **釈放日:%date%**
     """.trimIndent()
-    var jailReleaseMessage = "<red<bold>%name%は釈放されました"
+    var jailReleaseMessage = "<red><bold>%name%は釈放されました"
     var jailReleaseDiscordMessage = "**%name%は釈放されました**"
 
     // %name% ユーザー名
