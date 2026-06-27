@@ -62,8 +62,8 @@ class MessageConfig: AbstractConfig() {
     var jailReleaseDiscordMessage = "**%name%は釈放されました**"
 
     // %name% ユーザー名
-    var minecraftLoginMessage = "<yellow><bold>%name%がMan10Networkにログインしました"
-    var minecraftLogoutMessage = "<yellow><bold>%name%がMan10Networkからログアウトしました"
+    var minecraftLoginMessage = "<yellow>%name%がMan10Networkにログインしました"
+    var minecraftLogoutMessage = "<yellow>%name%がMan10Networkからログアウトしました"
 
     var discordLoginMessage = "**%name%がログインしました**"
     var discordLogoutMessage = "**%name%がログアウトしました**"
