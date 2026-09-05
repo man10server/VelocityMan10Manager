@@ -20,6 +20,7 @@ import org.ktorm.entity.find
 import red.man10.velocity.manager.AuthProvider
 import red.man10.velocity.manager.Utils.getServerName
 import red.man10.velocity.manager.Utils.applyPlaceholders
+import red.man10.velocity.manager.Utils.getTextureHash
 import red.man10.velocity.manager.VelocityMan10Manager
 import red.man10.velocity.manager.config.Config
 import red.man10.velocity.manager.config.sub.ChatConfig
@@ -344,10 +345,19 @@ class PlayerListener {
                 player.sendMessage(proxyMessage)
             }
 
-            DiscordBot.chat(
-                chatConfig.minecraftToDiscordTextFormat.applyPlaceholders(
-                    serverName + ("message" to discordMessage)
-                )
+            val skin = player.getTextureHash()
+            val discordPlaceholders = serverName + mapOf(
+                "uuid" to player.uniqueId.toString(),
+                "skin" to (skin ?: ""),
+                "message" to discordMessage
+            )
+            DiscordBot.chatAs(
+                chatConfig.minecraftToDiscordTextFormat.applyPlaceholders(discordPlaceholders),
+                chatConfig.minecraftToDiscordUsernameFormat.applyPlaceholders(discordPlaceholders),
+                chatConfig.minecraftToDiscordAvatarUrlFormat
+                    .takeUnless { skin == null && it.contains("%skin%") }
+                    ?.applyPlaceholders(discordPlaceholders),
+                chatConfig.minecraftToDiscordFallbackTextFormat.applyPlaceholders(discordPlaceholders)
             )
         }
 

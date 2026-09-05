@@ -11,6 +11,9 @@ class DiscordConfig: AbstractConfig() {
     var token = ""
     var guildId: Long = 0
 
+    // この名前で chat チャンネルの webhook を検索し、無ければ作成する
+    var chatWebhookName = "man10Chat"
+
     var chatChannelId: Long = 0
     var systemChannelId: Long = 0
     var logChannelId: Long = 0
@@ -22,6 +25,7 @@ class DiscordConfig: AbstractConfig() {
         enabled = config.node("enabled").getBoolean(true)
         token = config.node("token").getString("")
         guildId = config.node("guildId").getLong(0)
+        chatWebhookName = config.node("chatWebhookName").getString(chatWebhookName)
         val channelsNode = config.node("channels")
         chatChannelId = channelsNode.node("chat").getLong(0)
         systemChannelId = channelsNode.node("system").getLong(0)
@@ -35,6 +39,7 @@ class DiscordConfig: AbstractConfig() {
         config.node("enabled").set(true)
         config.node("token").set("")
         config.node("guildId").set(0)
+        config.node("chatWebhookName").set(chatWebhookName)
         val channelsNode = config.node("channels")
         channelsNode.node("chat").set(0)
         channelsNode.node("system").set(0)
