@@ -28,7 +28,14 @@ dependencies {
 
     implementation("net.dv8tion:JDA:5.6.1")
 
+    testImplementation("org.junit.jupiter:junit-jupiter:5.10.3")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher:1.10.3")
+
     kapt("com.velocitypowered:velocity-api:3.4.0-SNAPSHOT")
+}
+
+tasks.test {
+    useJUnitPlatform()
 }
 
 tasks.withType<ShadowJar> {
