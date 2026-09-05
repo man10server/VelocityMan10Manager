@@ -38,6 +38,7 @@ object DiscordBot: ListenerAdapter() {
     private class ChatWebhook(val id: Long, val client: IncomingWebhookClient)
 
     private val chatWebhook = AtomicReference<ChatWebhook?>()
+    private val messageSanitizer = DiscordMessageSanitizer()
 
     init {
         reload()
@@ -103,14 +104,14 @@ object DiscordBot: ListenerAdapter() {
     }
 
     fun chat(message: String) {
-        chatChannel?.sendMessage(message)?.queue()
+        chatChannel?.sendMessage(messageSanitizer.sanitize(message))?.queue()
     }
 
     fun chatAs(message: String, username: String, avatarUrl: String?, fallbackMessage: String) {
         val hook = chatWebhook.get() ?: return relayAsBot(fallbackMessage)
 
         try {
-            hook.client.sendMessage(message)
+            hook.client.sendMessage(messageSanitizer.sanitize(message))
                 .setAllowedMentions(emptyList())
                 .setUsername(username)
                 .setAvatarUrl(avatarUrl)
@@ -131,7 +132,7 @@ object DiscordBot: ListenerAdapter() {
     }
 
     private fun relayAsBot(message: String) {
-        chatChannel?.sendMessage(message)
+        chatChannel?.sendMessage(messageSanitizer.sanitize(message))
             ?.setAllowedMentions(emptyList())
             ?.queue()
     }
