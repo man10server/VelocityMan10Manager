@@ -31,6 +31,9 @@ class ChatConfig: AbstractConfig() {
     var minecraftToDiscordUsernameFormat = "%name% [@%server%]"
     var minecraftToDiscordAvatarUrlFormat = "https://avatar-renderer.man10.red/face/%skin%.png"
 
+    // webhook が使えないときは Bot 名義になり、送信者名とアイコンが出ない
+    var minecraftToDiscordFallbackTextFormat = "<%name%@%server%> %message%"
+
     override fun loadConfig(config: CommentedConfigurationNode) {
         val sendingNode = config.node("cancelSendingChatServer").childrenList()
         cancelSendingChatServer.clear()
@@ -50,6 +53,7 @@ class ChatConfig: AbstractConfig() {
         minecraftToDiscordTextFormat = config.node("minecraftToDiscordTextFormat").getString(minecraftToDiscordTextFormat)
         minecraftToDiscordUsernameFormat = config.node("minecraftToDiscordUsernameFormat").getString(minecraftToDiscordUsernameFormat)
         minecraftToDiscordAvatarUrlFormat = config.node("minecraftToDiscordAvatarUrlFormat").getString(minecraftToDiscordAvatarUrlFormat)
+        minecraftToDiscordFallbackTextFormat = config.node("minecraftToDiscordFallbackTextFormat").getString(minecraftToDiscordFallbackTextFormat)
     }
 
     override fun saveDefaultConfig(config: CommentedConfigurationNode) {
@@ -60,5 +64,6 @@ class ChatConfig: AbstractConfig() {
         config.node("minecraftToDiscordTextFormat").set(minecraftToDiscordTextFormat)
         config.node("minecraftToDiscordUsernameFormat").set(minecraftToDiscordUsernameFormat)
         config.node("minecraftToDiscordAvatarUrlFormat").set(minecraftToDiscordAvatarUrlFormat)
+        config.node("minecraftToDiscordFallbackTextFormat").set(minecraftToDiscordFallbackTextFormat)
     }
 }

@@ -356,7 +356,8 @@ class PlayerListener {
                 chatConfig.minecraftToDiscordUsernameFormat.applyPlaceholders(discordPlaceholders),
                 chatConfig.minecraftToDiscordAvatarUrlFormat
                     .takeUnless { skin == null && it.contains("%skin%") }
-                    ?.applyPlaceholders(discordPlaceholders)
+                    ?.applyPlaceholders(discordPlaceholders),
+                chatConfig.minecraftToDiscordFallbackTextFormat.applyPlaceholders(discordPlaceholders)
             )
         }
 
