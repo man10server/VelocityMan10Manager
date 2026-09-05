@@ -21,6 +21,7 @@ import red.man10.velocity.manager.config.sub.ChatConfig
 import red.man10.velocity.manager.config.sub.DiscordConfig
 import red.man10.velocity.manager.config.sub.LogConfig
 import red.man10.velocity.manager.config.sub.MessageConfig
+import java.util.concurrent.atomic.AtomicReference
 
 object DiscordBot: ListenerAdapter() {
 
@@ -34,8 +35,9 @@ object DiscordBot: ListenerAdapter() {
     var reportChannel: TextChannel? = null
     var jailChannel: TextChannel? = null
 
-    var chatWebhookId: Long? = null
-    var chatWebhookClient: IncomingWebhookClient? = null
+    private class ChatWebhook(val id: Long, val client: IncomingWebhookClient)
+
+    private val chatWebhook = AtomicReference<ChatWebhook?>()
 
     init {
         reload()
@@ -77,8 +79,7 @@ object DiscordBot: ListenerAdapter() {
     }
 
     private fun setupChatWebhook(config: DiscordConfig) {
-        chatWebhookId = null
-        chatWebhookClient = null
+        chatWebhook.set(null)
 
         val jda = jda ?: return
         val channel = chatChannel ?: return
@@ -95,8 +96,7 @@ object DiscordBot: ListenerAdapter() {
                 return
             }
 
-            chatWebhookId = webhook.idLong
-            chatWebhookClient = WebhookClient.createClient(jda, webhook.url)
+            chatWebhook.set(ChatWebhook(webhook.idLong, WebhookClient.createClient(jda, webhook.url)))
         } catch (e: Exception) {
             VelocityMan10Manager.logger.error("Failed to set up chat webhook: ${e.message}", e)
         }
@@ -107,15 +107,15 @@ object DiscordBot: ListenerAdapter() {
     }
 
     fun chatAs(message: String, username: String, avatarUrl: String?, fallbackMessage: String) {
-        val client = chatWebhookClient ?: return relayAsBot(fallbackMessage)
+        val hook = chatWebhook.get() ?: return relayAsBot(fallbackMessage)
 
         try {
-            client.sendMessage(message)
+            hook.client.sendMessage(message)
                 .setAllowedMentions(emptyList())
                 .setUsername(username)
                 .setAvatarUrl(avatarUrl)
                 .queue(null, ErrorHandler().handle(ErrorResponse.UNKNOWN_WEBHOOK) {
-                    invalidateChatWebhook(client)
+                    invalidateChatWebhook(hook)
                     relayAsBot(fallbackMessage)
                 })
         } catch (e: Exception) {
@@ -124,10 +124,9 @@ object DiscordBot: ListenerAdapter() {
         }
     }
 
-    private fun invalidateChatWebhook(stale: IncomingWebhookClient) {
-        if (chatWebhookClient !== stale) return
-        chatWebhookId = null
-        chatWebhookClient = null
+    private fun invalidateChatWebhook(stale: ChatWebhook) {
+        // 比較と無効化の間に reload が新しい webhook を公開しても、CAS が失敗して消さない
+        if (!chatWebhook.compareAndSet(stale, null)) return
         VelocityMan10Manager.logger.error("Chat webhook is gone. Falling back to bot messages until reload.")
     }
 
@@ -159,7 +158,7 @@ object DiscordBot: ListenerAdapter() {
 
     override fun onMessageReceived(e: MessageReceivedEvent) {
         if (e.author == jda?.selfUser) return
-        if (e.author.idLong == chatWebhookId) return
+        if (e.author.idLong == chatWebhook.get()?.id) return
         if (e.channel.id != chatChannel?.id) return
         val content = e.message.contentDisplay
 
