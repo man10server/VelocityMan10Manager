@@ -3,6 +3,8 @@ package red.man10.velocity.manager.discord
 import net.dv8tion.jda.api.JDA
 import net.dv8tion.jda.api.JDABuilder
 import net.dv8tion.jda.api.entities.Guild
+import net.dv8tion.jda.api.entities.IncomingWebhookClient
+import net.dv8tion.jda.api.entities.WebhookClient
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent
 import net.dv8tion.jda.api.events.session.ReadyEvent
@@ -29,6 +31,9 @@ object DiscordBot: ListenerAdapter() {
     var adminChannel: TextChannel? = null
     var reportChannel: TextChannel? = null
     var jailChannel: TextChannel? = null
+
+    var chatWebhookId: Long? = null
+    var chatWebhookClient: IncomingWebhookClient? = null
 
     init {
         reload()
@@ -65,10 +70,54 @@ object DiscordBot: ListenerAdapter() {
         adminChannel = guild?.getTextChannelById(config.adminChannelId)
         reportChannel = guild?.getTextChannelById(config.reportChannelId)
         jailChannel = guild?.getTextChannelById(config.jailChannelId)
+
+        setupChatWebhook(config)
+    }
+
+    private fun setupChatWebhook(config: DiscordConfig) {
+        chatWebhookId = null
+        chatWebhookClient = null
+
+        val jda = jda ?: return
+        val channel = chatChannel ?: return
+
+        try {
+            val webhook = channel.retrieveWebhooks().complete()
+                .firstOrNull { it.name == config.chatWebhookName }
+                ?: channel.createWebhook(config.chatWebhookName).complete()
+
+            if (webhook.token == null) {
+                VelocityMan10Manager.logger.error(
+                    "Webhook '${config.chatWebhookName}' has no accessible token. Falling back to bot messages."
+                )
+                return
+            }
+
+            chatWebhookId = webhook.idLong
+            chatWebhookClient = WebhookClient.createClient(jda, webhook.url)
+        } catch (e: Exception) {
+            VelocityMan10Manager.logger.error("Failed to set up chat webhook: ${e.message}", e)
+        }
     }
 
     fun chat(message: String) {
         chatChannel?.sendMessage(message)?.queue()
+    }
+
+    // 中継するのはプレイヤーの入力なので、メンションを一切解決させない
+    fun chatAs(message: String, username: String, avatarUrl: String?) {
+        val client = chatWebhookClient ?: return relayAsBot(message)
+        client.sendMessage(message)
+            .setAllowedMentions(emptyList())
+            .setUsername(username)
+            .setAvatarUrl(avatarUrl)
+            .queue()
+    }
+
+    private fun relayAsBot(message: String) {
+        chatChannel?.sendMessage(message)
+            ?.setAllowedMentions(emptyList())
+            ?.queue()
     }
 
     fun system(message: String) {
@@ -93,6 +142,7 @@ object DiscordBot: ListenerAdapter() {
 
     override fun onMessageReceived(e: MessageReceivedEvent) {
         if (e.author == jda?.selfUser) return
+        if (e.author.idLong == chatWebhookId) return
         if (e.channel.id != chatChannel?.id) return
         val content = e.message.contentDisplay
 

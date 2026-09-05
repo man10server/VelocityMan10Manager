@@ -21,7 +21,15 @@ class ChatConfig: AbstractConfig() {
     // %name% ユーザー名
     // %message% メッセージ内容
     var proxyMessageFormat = "<white>[<dark_aqua>@%server%<white>]%name%<aqua>:<white>%message%"
-    var minecraftToDiscordTextFormat = "<%name%@%server%> %message%"
+
+    // %server% サーバー名
+    // %name% ユーザー名
+    // %uuid% プレイヤーUUID(ハイフンあり)
+    // %skin% スキンのテクスチャハッシュ(スキン変更で必ず変わる)
+    // %message% メッセージ内容
+    var minecraftToDiscordTextFormat = "%message%"
+    var minecraftToDiscordUsernameFormat = "%name% [@%server%]"
+    var minecraftToDiscordAvatarUrlFormat = "https://avatar-renderer.man10.red/face/%skin%.png"
 
     override fun loadConfig(config: CommentedConfigurationNode) {
         val sendingNode = config.node("cancelSendingChatServer").childrenList()
@@ -40,6 +48,8 @@ class ChatConfig: AbstractConfig() {
         discordToMinecraftTextFormat = config.node("discordToMinecraftTextFormat").getString(discordToMinecraftTextFormat)
         proxyMessageFormat = config.node("proxyMessageFormat").getString(proxyMessageFormat)
         minecraftToDiscordTextFormat = config.node("minecraftToDiscordTextFormat").getString(minecraftToDiscordTextFormat)
+        minecraftToDiscordUsernameFormat = config.node("minecraftToDiscordUsernameFormat").getString(minecraftToDiscordUsernameFormat)
+        minecraftToDiscordAvatarUrlFormat = config.node("minecraftToDiscordAvatarUrlFormat").getString(minecraftToDiscordAvatarUrlFormat)
     }
 
     override fun saveDefaultConfig(config: CommentedConfigurationNode) {
@@ -48,5 +58,7 @@ class ChatConfig: AbstractConfig() {
         config.node("discordToMinecraftTextFormat").set(discordToMinecraftTextFormat)
         config.node("proxyMessageFormat").set(proxyMessageFormat)
         config.node("minecraftToDiscordTextFormat").set(minecraftToDiscordTextFormat)
+        config.node("minecraftToDiscordUsernameFormat").set(minecraftToDiscordUsernameFormat)
+        config.node("minecraftToDiscordAvatarUrlFormat").set(minecraftToDiscordAvatarUrlFormat)
     }
 }

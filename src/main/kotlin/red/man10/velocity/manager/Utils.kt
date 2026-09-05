@@ -1,14 +1,18 @@
 package red.man10.velocity.manager
 
+import com.google.gson.JsonParser
 import com.velocitypowered.api.command.CommandSource
 import com.velocitypowered.api.proxy.Player
 import java.io.File
 import java.net.JarURLConnection
 import java.net.URISyntaxException
 import java.net.URL
+import java.util.Base64
 import java.util.jar.JarFile
 
 object Utils {
+
+    private val textureUrlRegex = Regex("""/texture/([0-9a-f]+)$""")
 
     fun getClasses(url: URL, packageName: String): List<Class<*>> {
         val classes = ArrayList<Class<*>>()
@@ -40,6 +44,17 @@ object Utils {
     fun Player.getServerName(): String {
         return this.currentServer.map { it.serverInfo.name }.orElse("N/A")
     }
+
+    fun Player.getTextureHash(): String? = runCatching {
+        val encoded = gameProfileProperties
+            .firstOrNull { it.name == "textures" }
+            ?.value ?: return null
+        val json = JsonParser.parseString(String(Base64.getDecoder().decode(encoded))).asJsonObject
+        val url = json.getAsJsonObject("textures")
+            .getAsJsonObject("SKIN")
+            .get("url").asString
+        textureUrlRegex.find(url)?.groupValues?.get(1)
+    }.getOrNull()
 
     fun CommandSource.getName(): String {
         return if (this is Player) {
